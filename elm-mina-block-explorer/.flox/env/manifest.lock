@@ -1,0 +1,143 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "install": {
+      "elm": {
+        "pkg-path": "elmPackages.elm"
+      }
+    },
+    "hook": {},
+    "profile": {},
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ]
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/vwg5d8jbqz41wb18xf3v39q6zs4ff0lq-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T00:36:16.038496Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/6fxrbv9wgm15dxx14scl2rbqz5w2qx3m-elm-0.19.1-doc",
+        "out": "/nix/store/20csrai3hfim1wyimlx1n19jlmnfgnyq-elm-0.19.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/hig8wxwwv9118hizf9c35vpx0v36xhw6-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T00:54:48.749995Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/zj78s0h1qb81fggdgg4gkz9vpfka4whj-elm-0.19.1-doc",
+        "out": "/nix/store/0ahikcgvrn95r9lsr2m6b74hhz0rprk5-elm-0.19.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/26fyc2sbr8bqfigvq7a9n7kgj472zaz8-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T01:12:23.278066Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/7cs0y256m2kzbgn2gas6ga5djrx8aywv-elm-0.19.1-doc",
+        "out": "/nix/store/l5bb9aybx68z38rd4v9ysdssm6z0c478-elm-0.19.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/003f2pr347vb835likjvvn1zzqx4r5sl-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T01:32:28.224226Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/71305wv91ww6gw7xk2csdr0bk01nfb2m-elm-0.19.1-doc",
+        "out": "/nix/store/ifwmbwca3dxavxnm507csb4qa2jk8r1j-elm-0.19.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
