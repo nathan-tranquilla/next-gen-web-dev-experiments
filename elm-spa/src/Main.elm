@@ -10,69 +10,101 @@ import Page.Home as Home
 import Page.Blocks as Blocks
 import Page.BlockSpotlight as BlockSpotlight
 
-
 -- MODEL
 
 type alias Model =
     { page : Page
-    , key : Nav.Key -- Add Nav.Key to the model to store it
+    , key : Nav.Key
+    , blocksModel : Blocks.Model -- Store Blocks.Model separately
     }
 
-
 type Page
-    = Home
-    | Blocks
-    | BlockSpotlight String
-
+    = HomePage
+    | BlocksPage
+    | BlockSpotlightPage String
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
-    ( { page = parseUrl url
-      , key = key
-      }
-    , Cmd.none
+    let
+        ( page, cmd ) =
+            case parseUrl url of
+                HomePage ->
+                    ( HomePage, Cmd.none )
+                BlocksPage ->
+                    let
+                        ( blocksModel, blocksCmd ) = Blocks.init ()
+                    in
+                    ( BlocksPage, Cmd.map BlocksMsg blocksCmd )
+                BlockSpotlightPage statehash ->
+                    ( BlockSpotlightPage statehash, Cmd.none )
+    in
+    ( { page = page, key = key, blocksModel = Blocks.initModel }
+    , cmd
     )
-
 
 -- UPDATE
 
 type Msg
     = UrlChanged Url.Url
+    | BlocksMsg Blocks.Msg
     | NoOp
-
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        UrlChanged url ->
-            ( { model | page = parseUrl url }
-            , Cmd.none
+    case ( msg, model.page ) of
+        ( UrlChanged url, _ ) ->
+            let
+                ( page, cmd ) =
+                    case parseUrl url of
+                        HomePage ->
+                            ( HomePage, Cmd.none )
+                        BlocksPage ->
+                            let
+                                ( blocksModel, blocksCmd ) = Blocks.init ()
+                            in
+                            ( BlocksPage, Cmd.map BlocksMsg blocksCmd )
+                        BlockSpotlightPage statehash ->
+                            ( BlockSpotlightPage statehash, Cmd.none )
+            in
+            ( { model | page = page }
+            , cmd
             )
 
-        NoOp ->
+        ( BlocksMsg blocksMsg, BlocksPage ) ->
+            let
+                ( updatedBlocksModel, cmd ) = Blocks.update blocksMsg model.blocksModel
+            in
+            ( { model | blocksModel = updatedBlocksModel }
+            , Cmd.map BlocksMsg cmd
+            )
+
+        ( NoOp, _ ) ->
             ( model, Cmd.none )
 
+        _ ->
+            ( model, Cmd.none )
 
 -- ROUTING
 
 parseUrl : Url.Url -> Page
 parseUrl url =
     case Parser.parse parser url of
-        Just page ->
-            page
-
+        Just HomePage ->
+            HomePage
+        Just BlocksPage ->
+            BlocksPage
+        Just (BlockSpotlightPage statehash) ->
+            BlockSpotlightPage statehash
         Nothing ->
-            Home
-
+            HomePage
 
 parser : Parser (Page -> a) a
 parser =
     Parser.oneOf
-        [ Parser.map Home Parser.top
-        , Parser.map Blocks (s "blocks")
-        , Parser.map BlockSpotlight (s "blocks" </> string)
+        [ Parser.map HomePage Parser.top
+        , Parser.map BlocksPage (s "blocks")
+        , Parser.map BlockSpotlightPage (s "blocks" </> string)
         ]
-
 
 -- VIEW
 
@@ -80,22 +112,18 @@ view : Model -> Html Msg
 view model =
     div [ class "container" ]
         [ h1 [] [ text "Elm App" ]
-        , viewPage model.page
+        , viewPage model.page model.blocksModel
         ]
 
-
-viewPage : Page -> Html Msg
-viewPage page =
+viewPage : Page -> Blocks.Model -> Html Msg
+viewPage page blocksModel =
     case page of
-        Home ->
+        HomePage ->
             Home.view
-
-        Blocks ->
-            Blocks.view
-
-        BlockSpotlight statehash ->
+        BlocksPage ->
+            Html.map BlocksMsg (Blocks.view blocksModel)
+        BlockSpotlightPage statehash ->
             BlockSpotlight.view statehash
-
 
 -- MAIN
 
