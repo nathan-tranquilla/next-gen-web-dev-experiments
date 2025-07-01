@@ -1,6 +1,7 @@
 module Router exposing
     ( Config, define, createRoute, string, catchAll
     , Model, Msg(..), init, update, view, navigate, link
+    , matchRoute
     )
 
 import Browser
@@ -9,18 +10,20 @@ import Html exposing (Html)
 import Html.Attributes
 import Url exposing (Url)
 import Url.Parser as Parser exposing (Parser, (</>))
+import String
 
 -- TYPES
 
 type alias Config route model msg =
     { routes : List (RouteConfig route model msg)
+    , defaultRoute : route
     }
 
 type alias RouteConfig route model msg =
     { path : Path route
     , routeValue : route
     , view : route -> model -> Html msg
-    , update : msg -> route -> model -> (route, model, Cmd msg)
+    , update : msg -> route -> model -> ( route, model, Cmd msg )
     , toUrl : route -> String
     }
 
@@ -40,13 +43,37 @@ type Msg route
     | OnUrlChange Url
     | Navigate route
 
+-- INTERNAL HELPERS
+
+findRouteConfig : Config route model msg -> route -> Maybe (RouteConfig route model msg)
+findRouteConfig config targetRoute =
+    List.filter (\routeConfig -> routeConfig.routeValue == targetRoute) config.routes
+        |> List.head
+
+routeToUrl : Config route model msg -> route -> String
+routeToUrl config targetRoute =
+    case findRouteConfig config targetRoute of
+        Just routeConfig ->
+            routeConfig.toUrl targetRoute
+        Nothing ->
+            "/"
+
+stripTrailingSlash : String -> String
+stripTrailingSlash str =
+    if String.endsWith "/" str then
+        String.dropRight 1 str
+    else
+        str
+
 -- API
 
-define : List (RouteConfig route model msg) -> Config route model msg
-define routeConfigs =
-    { routes = routeConfigs }
+define : route -> List (RouteConfig route model msg) -> Config route model msg
+define defaultRoute routeConfigs =
+    { routes = routeConfigs
+    , defaultRoute = defaultRoute
+    }
 
-createRoute : route -> { path : String, view : route -> model -> Html msg, update : msg -> route -> model -> (route, model, Cmd msg), toUrl : route -> String } -> RouteConfig route model msg
+createRoute : route -> { path : String, view : route -> model -> Html msg, update : msg -> route -> model -> ( route, model, Cmd msg ), toUrl : route -> String } -> RouteConfig route model msg
 createRoute routeValue config =
     { path = Static config.path
     , routeValue = routeValue
@@ -63,21 +90,21 @@ catchAll : Path route
 catchAll =
     CatchAll
 
-init : Config route model msg -> Url -> Nav.Key -> (Model route model msg, Cmd (Msg route))
+init : Config route model msg -> Url -> Nav.Key -> ( Model route model msg, Cmd (Msg route) )
 init config url key =
     let
         matchedRoute = matchRoute config url
     in
     ( { currentRoute = matchedRoute, navKey = key, config = config }, Cmd.none )
 
-update : Msg route -> Model route model msg -> model -> (Model route model msg, model, Cmd msg)
+update : Msg route -> Model route model msg -> model -> ( Model route model msg, model, Cmd msg )
 update msg model externalModel =
     case msg of
         OnUrlRequest (Browser.Internal url) ->
             let
                 matchedRoute = matchRoute model.config url
             in
-            ( { model | currentRoute = matchedRoute }, externalModel, Nav.pushUrl model.navKey (Url.toString url) )
+            ( { model | currentRoute = matchedRoute }, externalModel, Nav.pushUrl model.navKey (routeToUrl model.config matchedRoute) )
 
         OnUrlRequest (Browser.External href) ->
             ( model, externalModel, Nav.load href )
@@ -108,18 +135,25 @@ link : route -> Config route model msg -> List (Html msg) -> Html msg
 link targetRoute config content =
     Html.a [ Html.Attributes.href (routeToUrl config targetRoute), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
 
--- INTERNAL
+-- ROUTE MATCHING
 
 matchRoute : Config route model msg -> Url -> route
 matchRoute config url =
     let
+        _ = Debug.log "matchRoute: url.path" url.path
+        _ = Debug.log "matchRoute: config.routes" config.routes
+        normalizedPath = stripTrailingSlash (String.dropLeft 1 url.path)
+        _ = Debug.log "matchRoute: normalizedPath" normalizedPath
         parser =
             Parser.oneOf
                 (List.map
                     (\routeConfig ->
                         case routeConfig.path of
                             Static path ->
-                                Parser.map routeConfig.routeValue (Parser.s path)
+                                if path == "" then
+                                    Parser.map routeConfig.routeValue Parser.top
+                                else
+                                    Parser.map routeConfig.routeValue (Parser.s path)
                             Dynamic dynamicParser ->
                                 dynamicParser
                             CatchAll ->
@@ -127,19 +161,8 @@ matchRoute config url =
                     )
                     config.routes
                 )
+        parsedRoute = Parser.parse parser { url | path = normalizedPath }
+        _ = Debug.log "matchRoute: parsedRoute" parsedRoute
     in
-    Parser.parse parser url
-        |> Maybe.withDefault (List.head config.routes |> Maybe.map .routeValue |> Maybe.withDefault (Debug.todo "No routes defined in Config"))
-
-findRouteConfig : Config route model msg -> route -> Maybe (RouteConfig route model msg)
-findRouteConfig config targetRoute =
-    List.filter (\routeConfig -> routeConfig.routeValue == targetRoute) config.routes
-        |> List.head
-
-routeToUrl : Config route model msg -> route -> String
-routeToUrl config targetRoute =
-    case findRouteConfig config targetRoute of
-        Just routeConfig ->
-            routeConfig.toUrl targetRoute
-        Nothing ->
-            "/"
+    parsedRoute
+        |> Maybe.withDefault config.defaultRoute

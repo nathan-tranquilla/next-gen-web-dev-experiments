@@ -9,6 +9,9 @@
       "elm-live": {
         "pkg-path": "elmPackages.elm-live"
       },
+      "elm-test": {
+        "pkg-path": "elmPackages.elm-test"
+      },
       "nodejs": {
         "pkg-path": "nodejs"
       }
@@ -40,6 +43,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T00:36:16.038496Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -70,6 +74,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T00:54:48.749995Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -100,6 +105,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T01:12:23.278066Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -130,6 +136,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T01:32:28.224226Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -160,6 +167,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T00:36:16.040600Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -189,6 +197,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T00:54:48.752579Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -218,6 +227,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T01:12:23.280184Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -247,6 +257,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T01:32:28.226989Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -256,6 +267,126 @@
       ],
       "outputs": {
         "out": "/nix/store/4mk9i3nmhhf96bzqnfay1zr3yxrkjwhp-elm-live-4.0.2"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-test",
+      "broken": false,
+      "derivation": "/nix/store/24sxdihb0i0p88rdbk4whaq9qck3a95i-elm-test-0.19.1-revision15.drv",
+      "description": "Runs elm-test suites from Node.js",
+      "install_id": "elm-test",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-test-0.19.1-revision15",
+      "pname": "elm-test",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T00:36:16.041543Z",
+      "stabilities": [
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1-revision15",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/ppqs1pwj9vpqsfc108qkbys081n38bh9-elm-test-0.19.1-revision15"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-test",
+      "broken": false,
+      "derivation": "/nix/store/y6v7lj226ni3z9q3qcyr9b798h9kfcvq-elm-test-0.19.1-revision15.drv",
+      "description": "Runs elm-test suites from Node.js",
+      "install_id": "elm-test",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-test-0.19.1-revision15",
+      "pname": "elm-test",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T00:54:48.753749Z",
+      "stabilities": [
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1-revision15",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/wp5w2wlsf99fgvxlbknwvrqcpdc4zii2-elm-test-0.19.1-revision15"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-test",
+      "broken": false,
+      "derivation": "/nix/store/7b49ykrgjkh1q3zs6czkpl1nmbg3s58z-elm-test-0.19.1-revision15.drv",
+      "description": "Runs elm-test suites from Node.js",
+      "install_id": "elm-test",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-test-0.19.1-revision15",
+      "pname": "elm-test",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T01:12:23.281151Z",
+      "stabilities": [
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1-revision15",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/69d6z9r7mnaf1mrrwsxnlq0mz3azzzhd-elm-test-0.19.1-revision15"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-test",
+      "broken": false,
+      "derivation": "/nix/store/z9cdwb4x2ik9ccki2rp6va1lb36airfr-elm-test-0.19.1-revision15.drv",
+      "description": "Runs elm-test suites from Node.js",
+      "install_id": "elm-test",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "name": "elm-test-0.19.1-revision15",
+      "pname": "elm-test",
+      "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+      "rev_count": 816272,
+      "rev_date": "2025-06-17T04:31:58Z",
+      "scrape_date": "2025-06-18T01:32:28.228238Z",
+      "stabilities": [
+        "staging",
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1-revision15",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/ypqig50f8rwja9wpphq30yjha88zgfvk-elm-test-0.19.1-revision15"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
@@ -276,6 +407,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T00:36:18.954104Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -307,6 +439,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T00:54:59.355432Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -338,6 +471,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T01:12:26.281967Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,
@@ -369,6 +503,7 @@
       "rev_date": "2025-06-17T04:31:58Z",
       "scrape_date": "2025-06-18T01:32:41.022377Z",
       "stabilities": [
+        "staging",
         "unstable"
       ],
       "unfree": false,

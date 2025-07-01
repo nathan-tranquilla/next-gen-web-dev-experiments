@@ -1,22 +1,21 @@
 module Routes exposing (Route(..), routes)
 
-import AppModel as AppModel exposing (..)
+import AppModel
 import Router
 import Html exposing (Html)
 import Page.Home as Home
 import Page.Blocks as Blocks
--- import Page.BlockSpotlight as BlockSpotlight
-import Url.Parser exposing ((</>))
+import Page.BlockSpotlight as BlockSpotlight
+import Url.Parser as Parser exposing ((</>))
 
 type Route
     = HomePage
     | BlocksPage
     | BlockSpotlightPage String
-    | NotFound
 
 routes : Router.Config Route AppModel.Model AppModel.Msg
 routes =
-    Router.define
+    Router.define HomePage
         [ Router.createRoute HomePage
             { path = ""
             , view = \_ _ -> Home.view
