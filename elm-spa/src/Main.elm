@@ -1,19 +1,22 @@
 module Main exposing (main)
 
+import AppModel as AppModel exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Router
 import Html exposing (Html, div, h1, nav, text)
 import Html.Attributes exposing (class)
-import Page.Blocks as Blocks
-import Routes exposing (Route(..), Msg(..), routes)
+import Routes exposing (Route(..), routes)
 import Url exposing (Url)
 
 type alias Model =
-    { router : Router.Model Route Blocks.Model Routes.Msg
-    , blocksModel : Blocks.Model
+    { router : Router.Model Route AppModel.Model AppModel.Msg
+    , appModel : AppModel.Model
     }
 
+type Msg
+    = RouterMsg (Router.Msg Route)
+    | AppMsg AppModel.Msg
 
 main : Program () Model Msg
 main =
@@ -26,20 +29,18 @@ main =
         , onUrlChange = RouterMsg << Router.OnUrlChange
         }
 
-init : () -> Url -> Nav.Key -> (Model, Cmd Msg)
+init : () -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     let
-
-        (routerModel, routerCmd) = Router.init routes url key
-        (blocksModel, blocksCmd) = Blocks.init ()
+        ( routerModel, routerCmd ) = Router.init routes url key
+        ( appModel, appCmd ) = AppModel.init ()
     in
-    ( { router = routerModel, blocksModel = blocksModel }
+    ( { router = routerModel, appModel = appModel }
     , Cmd.batch
         [ Cmd.map RouterMsg routerCmd
-        , Cmd.map BlocksMsg blocksCmd
+        , Cmd.map AppMsg appCmd
         ]
     )
-
 
 view : Model -> Browser.Document Msg
 view model =
@@ -48,26 +49,26 @@ view model =
         [ div [ class "container" ]
             [ h1 [] [ text "Elm App" ]
             , nav []
-                [ Router.link HomePage routes [ text "Home" ]
+                [ Router.link HomePage routes [ text "Home" ] |> Html.map AppMsg
                 , text " | "
-                , Router.link BlocksPage routes [ text "Blocks" ]
+                , Router.link BlocksPage routes [ text "Blocks" ] |> Html.map AppMsg
                 ]
-            , Router.view model.router model.blocksModel
+            , Router.view model.router model.appModel |> Html.map AppMsg
             ]
         ]
     }
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         RouterMsg routerMsg ->
             let
-                (newRouter, newBlocksModel, routerCmd) = Router.update routerMsg model.router model.blocksModel
+                ( newRouter, newAppModel, routerCmd ) = Router.update routerMsg model.router model.appModel
             in
-            ( { model | router = newRouter, blocksModel = newBlocksModel }, routerCmd )
+            ( { model | router = newRouter, appModel = newAppModel }, Cmd.map AppMsg routerCmd )
 
-        BlocksMsg blocksMsg ->
+        AppMsg appMsg ->
             let
-                (updatedBlocksModel, blocksCmd) = Blocks.update blocksMsg model.blocksModel
+                ( newAppModel, appCmd ) = AppModel.update appMsg model.appModel
             in
-            ( { model | blocksModel = updatedBlocksModel }, Cmd.map BlocksMsg blocksCmd )
+            ( { model | appModel = newAppModel }, Cmd.map AppMsg appCmd )
