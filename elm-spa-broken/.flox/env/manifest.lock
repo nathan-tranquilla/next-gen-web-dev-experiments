@@ -1,0 +1,262 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "install": {
+      "elm": {
+        "pkg-path": "elmPackages.elm"
+      },
+      "elm-live": {
+        "pkg-path": "elmPackages.elm-live"
+      }
+    },
+    "hook": {},
+    "profile": {},
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ]
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/aqq9xg40xnfm87rfa3m9igxy6ydiwn1c-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T04:56:14.195755Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/hzazsnmmwvlgrccqj0m6l2ppli4sh080-elm-0.19.1-doc",
+        "out": "/nix/store/clc1a8fxl8p9br0ik1g46pgmz6xind9m-elm-0.19.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/pgs4dswfyv3sfmxx0np4xpd4z2x1qb0v-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T05:19:54.181463Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/zb3ar0g1z9na58jq50m6jqsy53yva32n-elm-0.19.1-doc",
+        "out": "/nix/store/7b7pwrgawbn8hyahx0wc49dwfxq1imgr-elm-0.19.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/6waix9zwl89pb75j6q2fgffpgp20yc04-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T05:38:12.799924Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/z80k20ym4sznjlmz33jzxzayywcplwl4-elm-0.19.1-doc",
+        "out": "/nix/store/vbn7rsircvn19qh8gda1aznfi1b96i5w-elm-0.19.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm",
+      "broken": false,
+      "derivation": "/nix/store/ap9yayfnp7jjk27cl6kwlz9pbkzh7ay6-elm-0.19.1.drv",
+      "description": "Delightful language for reliable webapps",
+      "install_id": "elm",
+      "license": "BSD-3-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-0.19.1",
+      "pname": "elm",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T06:00:02.394078Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.19.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/r7j9skdvjxyjz99ycph5g33nqkc2mxx6-elm-0.19.1-doc",
+        "out": "/nix/store/wji5yx7kniw101nrn7jfs8vk7m2ixk9q-elm-0.19.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-live",
+      "broken": false,
+      "derivation": "/nix/store/w36ksdmk120sgz628rdm75haayiimxd9-elm-live-4.0.2.drv",
+      "description": "A flexible dev server for Elm. Live reload included!",
+      "install_id": "elm-live",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-live-4.0.2",
+      "pname": "elm-live",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T04:56:14.197922Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.0.2",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/f847746ik57kkhz3h93phmhrj8fhrbp6-elm-live-4.0.2"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-live",
+      "broken": false,
+      "derivation": "/nix/store/2k9m26iwr474gc87s4xfbjrxr07ljhc4-elm-live-4.0.2.drv",
+      "description": "A flexible dev server for Elm. Live reload included!",
+      "install_id": "elm-live",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-live-4.0.2",
+      "pname": "elm-live",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T05:19:54.184013Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.0.2",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/qdj9qmlcqg5cs7m5g05k1hq6y150mkyk-elm-live-4.0.2"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-live",
+      "broken": false,
+      "derivation": "/nix/store/xh7xfvzkm5y0a9kfl63glfq7ni2saagf-elm-live-4.0.2.drv",
+      "description": "A flexible dev server for Elm. Live reload included!",
+      "install_id": "elm-live",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-live-4.0.2",
+      "pname": "elm-live",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T05:38:12.802028Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.0.2",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/rsswcwxm7314ir4d3ihx6wzqj7kykk7y-elm-live-4.0.2"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "elmPackages.elm-live",
+      "broken": false,
+      "derivation": "/nix/store/0mg968nkjicys105dsfzgxc0vv10iw7p-elm-live-4.0.2.drv",
+      "description": "A flexible dev server for Elm. Live reload included!",
+      "install_id": "elm-live",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "name": "elm-live-4.0.2",
+      "pname": "elm-live",
+      "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+      "rev_count": 822156,
+      "rev_date": "2025-06-27T08:03:01Z",
+      "scrape_date": "2025-06-29T06:00:02.396792Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "4.0.2",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/rcl5ajq081ibdjagnp0js3kxwq10yz5b-elm-live-4.0.2"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
