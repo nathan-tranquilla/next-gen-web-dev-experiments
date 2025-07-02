@@ -1,5 +1,5 @@
 module Router exposing
-    ( Config, define, createRoute, string, catchAll
+    ( define
     , Model, Msg(..), init, update, view, navigate, link
     , matchRoute
     )
@@ -11,139 +11,87 @@ import Html.Attributes
 import Url exposing (Url)
 import Url.Parser as Parser exposing (Parser, (</>))
 import String
+import RouteConfig exposing (Config, RouteConfig, Path(..))
 
--- TYPES
-
-type alias Config route model msg =
-    { routes : List (RouteConfig route model msg)
-    , defaultRoute : route
-    }
-
-type alias RouteConfig route model msg =
-    { path : Path route
-    , routeValue : route
-    , view : route -> model -> Html msg
-    , update : msg -> route -> model -> ( route, model, Cmd msg )
-    , toUrl : route -> String
-    }
-
-type Path route
-    = Static String
-    | Dynamic (Parser (route -> route) route)
-    | CatchAll
-
-type alias Model route model msg =
-    { currentRoute : route
+type alias Model model msg =
+    { currentPath : String
     , navKey : Nav.Key
-    , config : Config route model msg
+    , config : Config model msg
     }
 
-type Msg route
+type Msg
     = OnUrlRequest Browser.UrlRequest
     | OnUrlChange Url
-    | Navigate route
+    | Navigate String
 
--- INTERNAL HELPERS
-
-findRouteConfig : Config route model msg -> route -> Maybe (RouteConfig route model msg)
-findRouteConfig config targetRoute =
-    List.filter (\routeConfig -> routeConfig.routeValue == targetRoute) config.routes
+findRouteConfig : Config model msg -> String -> Maybe (RouteConfig model msg)
+findRouteConfig config path =
+    List.filter
+        (\routeConfig ->
+            case routeConfig.path of
+                Static p -> p == path
+                Dynamic _ -> False
+                CatchAll -> True
+        )
+        config.routes
         |> List.head
 
-routeToUrl : Config route model msg -> route -> String
-routeToUrl config targetRoute =
-    case findRouteConfig config targetRoute of
-        Just routeConfig ->
-            routeConfig.toUrl targetRoute
-        Nothing ->
-            "/"
+pathToUrl : String -> String
+pathToUrl path =
+    "/" ++ path
 
-stripTrailingSlash : String -> String
-stripTrailingSlash str =
-    if String.endsWith "/" str then
-        String.dropRight 1 str
-    else
-        str
-
--- API
-
-define : route -> List (RouteConfig route model msg) -> Config route model msg
-define defaultRoute routeConfigs =
+define : String -> List (RouteConfig model msg) -> Config model msg
+define defaultPath routeConfigs =
     { routes = routeConfigs
-    , defaultRoute = defaultRoute
+    , defaultPath = defaultPath
     }
 
-createRoute : route -> { path : String, view : route -> model -> Html msg, update : msg -> route -> model -> ( route, model, Cmd msg ), toUrl : route -> String } -> RouteConfig route model msg
-createRoute routeValue config =
-    { path = Static config.path
-    , routeValue = routeValue
-    , view = config.view
-    , update = config.update
-    , toUrl = config.toUrl
-    }
-
-string : (String -> route) -> Path route
-string constructor =
-    Dynamic (Parser.map constructor Parser.string)
-
-catchAll : Path route
-catchAll =
-    CatchAll
-
-init : Config route model msg -> Url -> Nav.Key -> ( Model route model msg, Cmd (Msg route) )
+init : Config model msg -> Url -> Nav.Key -> ( Model model msg, Cmd Msg )
 init config url key =
     let
-        matchedRoute = matchRoute config url
+        matchedPath = matchRoute config url
     in
-    ( { currentRoute = matchedRoute, navKey = key, config = config }, Cmd.none )
+    ( { currentPath = matchedPath, navKey = key, config = config }, Cmd.none )
 
-update : Msg route -> Model route model msg -> model -> ( Model route model msg, model, Cmd msg )
+update : Msg -> Model model msg -> model -> ( Model model msg, model, Cmd Msg )
 update msg model externalModel =
     case msg of
         OnUrlRequest (Browser.Internal url) ->
             let
-                matchedRoute = matchRoute model.config url
+                matchedPath = matchRoute model.config url
             in
-            ( { model | currentRoute = matchedRoute }, externalModel, Nav.pushUrl model.navKey (routeToUrl model.config matchedRoute) )
+            ( { model | currentPath = matchedPath }, externalModel, Nav.pushUrl model.navKey (pathToUrl matchedPath) )
 
         OnUrlRequest (Browser.External href) ->
             ( model, externalModel, Nav.load href )
 
         OnUrlChange url ->
             let
-                matchedRoute = matchRoute model.config url
+                matchedPath = matchRoute model.config url
             in
-            ( { model | currentRoute = matchedRoute }, externalModel, Cmd.none )
+            ( { model | currentPath = matchedPath }, externalModel, Cmd.none )
 
-        Navigate targetRoute ->
-            let
-                url = routeToUrl model.config targetRoute
-            in
-            ( { model | currentRoute = targetRoute }, externalModel, Nav.pushUrl model.navKey url )
+        Navigate targetPath ->
+            ( { model | currentPath = targetPath }, externalModel, Nav.pushUrl model.navKey (pathToUrl targetPath) )
 
-view : Model route model msg -> model -> Html msg
+view : Model model msg -> model -> Html msg
 view model externalModel =
-    case findRouteConfig model.config model.currentRoute of
-        Just routeConfig -> routeConfig.view model.currentRoute externalModel
+    case findRouteConfig model.config model.currentPath of
+        Just routeConfig -> routeConfig.view externalModel
         Nothing -> Html.text "Route not found"
 
-navigate : route -> Model route model msg -> Cmd (Msg route)
-navigate targetRoute model =
-    Nav.pushUrl model.navKey (routeToUrl model.config targetRoute)
+navigate : String -> Model model msg -> Cmd Msg
+navigate targetPath model =
+    Nav.pushUrl model.navKey (pathToUrl targetPath)
 
-link : route -> Config route model msg -> List (Html msg) -> Html msg
-link targetRoute config content =
-    Html.a [ Html.Attributes.href (routeToUrl config targetRoute), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
+link : String -> Config model msg -> List (Html Msg) -> Html Msg
+link path _ content =
+    Html.a [ Html.Attributes.href (pathToUrl path), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
 
--- ROUTE MATCHING
-
-matchRoute : Config route model msg -> Url -> route
+matchRoute : Config model msg -> Url -> String
 matchRoute config url =
     let
-        _ = Debug.log "matchRoute: url.path" url.path
-        _ = Debug.log "matchRoute: config.routes" config.routes
         normalizedPath = stripTrailingSlash (String.dropLeft 1 url.path)
-        _ = Debug.log "matchRoute: normalizedPath" normalizedPath
         parser =
             Parser.oneOf
                 (List.map
@@ -151,18 +99,24 @@ matchRoute config url =
                         case routeConfig.path of
                             Static path ->
                                 if path == "" then
-                                    Parser.map routeConfig.routeValue Parser.top
+                                    Parser.map path Parser.top
                                 else
-                                    Parser.map routeConfig.routeValue (Parser.s path)
+                                    Parser.map path (Parser.s path)
                             Dynamic dynamicParser ->
                                 dynamicParser
                             CatchAll ->
-                                Parser.map routeConfig.routeValue Parser.top
+                                Parser.map normalizedPath Parser.top
                     )
                     config.routes
                 )
-        parsedRoute = Parser.parse parser { url | path = normalizedPath }
-        _ = Debug.log "matchRoute: parsedRoute" parsedRoute
+        parsedPath = Parser.parse parser { url | path = normalizedPath }
     in
-    parsedRoute
-        |> Maybe.withDefault config.defaultRoute
+    parsedPath
+        |> Maybe.withDefault config.defaultPath
+
+stripTrailingSlash : String -> String
+stripTrailingSlash str =
+    if String.endsWith "/" str then
+        String.dropRight 1 str
+    else
+        str

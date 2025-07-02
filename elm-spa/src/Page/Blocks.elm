@@ -1,41 +1,22 @@
-module Page.Blocks exposing (Model, Msg, init, update, view, initModel)
+module Page.Blocks exposing (initModel, update, view, routeConfig, getBlocks)
 
 import Html exposing (Html, div, text, ul, li)
 import Http
 import Json.Decode as Decode exposing (Decoder, field, string, int, bool, nullable)
 import Json.Encode as Encode
+import RouteConfig exposing (RouteConfig, Path(..))
+import Shared exposing (Model(..), Msg(..), Block, BlocksMsg(..))
 
--- MODEL
-
-type alias Block =
-    { canonical : Bool
-    , blockHeight : Int
-    , stateHash : String
-    , coinbaseReceiverUsername : Maybe String
-    , snarkFees : String
-    }
-
-type alias Model =
+type alias BlocksModel =
     { blocks : List Block
     , error : Maybe String
     }
 
-initModel : Model
+initModel : BlocksModel
 initModel =
     { blocks = [], error = Nothing }
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( { blocks = [], error = Nothing }
-    , getBlocks
-    )
-
--- UPDATE
-
-type Msg
-    = GotBlocks (Result Http.Error (List Block))
-
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : BlocksMsg -> BlocksModel -> ( BlocksModel, Cmd BlocksMsg )
 update msg model =
     case msg of
         GotBlocks result ->
@@ -44,6 +25,9 @@ update msg model =
                     ( { model | blocks = blocks, error = Nothing }, Cmd.none )
                 Err error ->
                     ( { model | error = Just (errorToString error), blocks = [] }, Cmd.none )
+
+        GetBlocks ->
+            ( model, getBlocks )
 
 errorToString : Http.Error -> String
 errorToString error =
@@ -59,9 +43,7 @@ errorToString error =
         Http.BadBody body ->
             "Invalid response: " ++ body
 
--- HTTP REQUEST
-
-getBlocks : Cmd Msg
+getBlocks : Cmd BlocksMsg
 getBlocks =
     Http.post
         { url = "https://api.minasearch.com/graphql"
@@ -79,8 +61,6 @@ getBlocks =
         , expect = Http.expectJson GotBlocks blocksDecoder
         }
 
--- JSON DECODER
-
 blocksDecoder : Decoder (List Block)
 blocksDecoder =
     Decode.field "data" (Decode.field "blocks" (Decode.list blockDecoder))
@@ -94,22 +74,24 @@ blockDecoder =
         (field "coinbaseReceiverUsername" (nullable string))
         (field "snarkFees" string)
 
--- VIEW
-
 view : Model -> Html Msg
-view model =
-    div []
-        [ text "Blocks Page - Latest Blocks"
-        , case model.error of
-            Just error ->
-                div [] [ text ("Error: " ++ error) ]
-            Nothing ->
-                if List.isEmpty model.blocks then
-                    div [] [ text "Loading..." ]
-                else
-                    ul []
-                        (List.map viewBlock model.blocks)
-        ]
+view (Model model) =
+    case model.blocks of
+        Just blocksModel ->
+            div []
+                [ text "Blocks Page - Latest Blocks"
+                , case blocksModel.error of
+                    Just error ->
+                        div [] [ text ("Error: " ++ error) ]
+                    Nothing ->
+                        if List.isEmpty blocksModel.blocks then
+                            div [] [ text "Loading..." ]
+                        else
+                            ul []
+                                (List.map viewBlock blocksModel.blocks)
+                ]
+        Nothing ->
+            div [] [ text "Loading..." ]
 
 viewBlock : Block -> Html Msg
 viewBlock block =
@@ -120,3 +102,9 @@ viewBlock block =
                ++ ", Coinbase: " ++ (Maybe.withDefault "N/A" block.coinbaseReceiverUsername)
                ++ ", Fees: " ++ block.snarkFees)
         ]
+
+routeConfig : RouteConfig Model Msg
+routeConfig =
+    { path = Static "blocks"
+    , view = view
+    }
