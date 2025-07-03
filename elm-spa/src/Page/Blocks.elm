@@ -96,11 +96,11 @@ view (Model model) =
 viewBlock : Block -> Html Msg
 viewBlock block =
     li []
-        [ text ("Height: " ++ String.fromInt block.blockHeight
-               ++ ", StateHash: " ++ block.stateHash
-               ++ ", Canonical: " ++ (if block.canonical then "Yes" else "No")
-               ++ ", Coinbase: " ++ (Maybe.withDefault "N/A" block.coinbaseReceiverUsername)
-               ++ ", Fees: " ++ block.snarkFees)
+        [ text ("Height: " ++ String.fromInt block.blockHeight)
+        , text ("StateHash: " ++ block.stateHash)
+        , text ("Canonical: " ++ (if block.canonical then "Yes" else "No"))
+        , text ("Coinbase: " ++ (Maybe.withDefault "N/A" block.coinbaseReceiverUsername))
+        , text ("Fees: " ++ block.snarkFees)
         ]
 
 routeConfig : RouteConfig Model Msg
