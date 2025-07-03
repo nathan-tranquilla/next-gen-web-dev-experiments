@@ -1,42 +1,61 @@
 module RouterTest exposing (suite)
 
-import AppModel
 import Expect
-import Page.Blocks as Blocks
-import Router exposing (matchRoute)
-import Routes exposing (Route(..))
 import Test exposing (..)
-import Url exposing (Url, Protocol(..))
+import Router exposing (findRouteConfig)
+import RouteConfig exposing (Path(..))
+import Page.Blocks as Blocks
+import Page.Home as Home
+import Router
+import Url exposing (Protocol(..))
 
 suite : Test
 suite =
-    describe "Router.matchRoute"
-        [ test "matches / to HomePage" <|
-            \_ ->
-                let
-                    url = Url.fromString "http://localhost:8000/" |> Maybe.withDefault (Url Http "localhost" (Just 8000) "" Nothing Nothing)
-                    config = Routes.routes
-                    matchedRoute = Router.matchRoute config url
-                in
-                Expect.equal HomePage matchedRoute
-
-        , test "matches /blocks to BlocksPage" <|
-            \_ ->
-                let
-                    url = Url.fromString "http://localhost:8000/blocks" |> Maybe.withDefault (Url Http "localhost" (Just 8000) "/blocks" Nothing Nothing)
-                    config = Routes.routes
-                    matchedRoute = Router.matchRoute config url
-                in
-                Expect.equal BlocksPage matchedRoute
-
-        , test "matches /blocks/ to BlocksPage" <|
-            \_ ->
-                let
-                    url = Url.fromString "http://localhost:8000/blocks/" |> Maybe.withDefault (Url Http "localhost" (Just 8000) "/blocks/" Nothing Nothing)
-                    config = Routes.routes
-                    matchedRoute = Router.matchRoute config url
-                in
-                Expect.equal BlocksPage matchedRoute
-
-
+    describe "Router"
+        [ describe "findRouteConfig"
+            [ test "matches '' to HomePage route" <|
+                \_ ->
+                    let
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig ]
+                    in
+                    Expect.equal (Just Home.routeConfig) (findRouteConfig config "")
+            , test "matches 'blocks' to BlocksPage route" <|
+                \_ ->
+                    let
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig ]
+                    in
+                    Expect.equal (Just Blocks.routeConfig) (findRouteConfig config "blocks")
+            , test "returns Nothing for unknown path" <|
+                \_ ->
+                    let
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig ]
+                    in
+                    Expect.equal Nothing (findRouteConfig config "unknown")
+            ]
+        , describe "matchRoute"
+            [ test "matches / to HomePage" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig ]
+                        matchedRoute = Router.matchRoute config url
+                    in
+                    Expect.equal "" matchedRoute
+            , test "matches /blocks to BlocksPage" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig ]
+                        matchedRoute = Router.matchRoute config url
+                    in
+                    Expect.equal "blocks" matchedRoute
+            , test "matches /blocks/ to BlocksPage" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig ]
+                        matchedRoute = Router.matchRoute config url
+                    in
+                    Expect.equal "blocks" matchedRoute
+            ]
         ]

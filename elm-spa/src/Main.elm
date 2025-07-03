@@ -3,9 +3,9 @@ module Main exposing (main)
 import Browser
 import Browser.Navigation as Nav
 import Router
-import Html exposing (Html, div, h1, nav, text)
+import Html exposing (div, h1, nav, text)
 import Html.Attributes exposing (class)
-import RouteConfig exposing (Config, RouteConfig, Path(..))
+import RouteConfig exposing (Config, Path(..))
 import Url exposing (Url)
 import Page.Blocks as Blocks
 import Page.Home as Home

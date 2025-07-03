@@ -1,15 +1,11 @@
-module Router exposing
-    ( define
-    , Model, Msg(..), init, update, view, navigate, link
-    , matchRoute
-    )
+module Router exposing (..)
 
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (Html)
 import Html.Attributes
 import Url exposing (Url)
-import Url.Parser as Parser exposing (Parser, (</>))
+import Url.Parser as Parser exposing ((</>))
 import String
 import RouteConfig exposing (Config, RouteConfig, Path(..))
 import Debug
@@ -86,9 +82,9 @@ update msg routerModel appModel =
         _ -> (routerModel, appModel, Cmd.none)
 
 view : Model model msg -> model -> Html msg
-view model externalModel =
-    case findRouteConfig model.config model.currentPath of
-        Just routeConfig -> routeConfig.view externalModel
+view routerModel appModel =
+    case findRouteConfig routerModel.config routerModel.currentPath of
+        Just routeConfig -> routeConfig.view appModel
         Nothing -> Html.text "Route not found"
 
 navigate : String -> Model model msg -> Cmd Msg

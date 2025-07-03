@@ -11703,11 +11703,11 @@ var $author$project$Router$findRouteConfig = F2(
 				config.routes));
 	});
 var $author$project$Router$view = F2(
-	function (model, externalModel) {
-		var _v0 = A2($author$project$Router$findRouteConfig, model.config, model.currentPath);
+	function (routerModel, appModel) {
+		var _v0 = A2($author$project$Router$findRouteConfig, routerModel.config, routerModel.currentPath);
 		if (_v0.$ === 'Just') {
 			var routeConfig = _v0.a;
-			return routeConfig.view(externalModel);
+			return routeConfig.view(appModel);
 		} else {
 			return $elm$html$Html$text('Route not found');
 		}
