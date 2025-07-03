@@ -10,6 +10,7 @@ import Url exposing (Url)
 import Page.Blocks as Blocks
 import Page.Home as Home
 import Shared exposing (Model(..), Msg(..), BlocksMsg(..))
+import Debug
 
 main : Program () Model Msg
 main =
@@ -64,19 +65,41 @@ update msg (Model model) =
     case msg of
         RouterMsg routerMsg ->
             let
+                _ = Debug.log "Main.update: case path" "RouterMsg"
                 ( newRouter, _, routerCmd ) = Router.update routerMsg model.router (Model model)
             in
-            ( Model { model | router = newRouter }
-            , Cmd.map RouterMsg routerCmd
-            )
+            case routerMsg of
+                Router.Navigate "blocks" ->
+                    let
+                        _ = Debug.log "Main.update: case path" "RouterMsg -> Navigate blocks"
+                    in
+                    ( Model { model | router = newRouter, blocks = Just Blocks.initModel }
+                    , Cmd.batch [ Cmd.map RouterMsg routerCmd, Cmd.map BlocksMsg Blocks.getBlocks ]
+                    )
+                _ ->
+                    let
+                        _ = Debug.log "Main.update: case path" "RouterMsg -> other"
+                        _ = Debug.log "Main.update: routerMsg in other" (Debug.toString routerMsg)
+                        _ = Debug.log "Main.update: newRouter.currentPath in other" newRouter.currentPath
+                    in
+                    ( Model { model | router = newRouter }
+                    , Cmd.map RouterMsg routerCmd
+                    )
 
         BlocksMsg blocksMsg ->
             let
+                _ = Debug.log "Main.update: case path" "BlocksMsg"
                 ( newBlocksModel, blocksCmd ) =
                     case model.blocks of
                         Just blocksModel ->
+                            let
+                                _ = Debug.log "Main.update: case path" "BlocksMsg -> Just blocksModel"
+                            in
                             Blocks.update blocksMsg blocksModel
                         Nothing ->
+                            let
+                                _ = Debug.log "Main.update: case path" "BlocksMsg -> Nothing"
+                            in
                             Blocks.update blocksMsg Blocks.initModel
             in
             ( Model { model | blocks = Just newBlocksModel }

@@ -11427,6 +11427,8 @@ var $author$project$Page$Home$routeConfig = {
 	}
 };
 var $author$project$Page$Blocks$initModel = {blocks: _List_Nil, error: $elm$core$Maybe$Nothing};
+var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Page$Blocks$errorToString = function (error) {
 	switch (error.$) {
 		case 'BadUrl':
@@ -11471,11 +11473,62 @@ var $author$project$Page$Blocks$update = F2(
 			return _Utils_Tuple2(model, $author$project$Page$Blocks$getBlocks);
 		}
 	});
+var $author$project$Router$Navigate = function (a) {
+	return {$: 'Navigate', a: a};
+};
 var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $author$project$Router$pathToUrl = function (path) {
 	return '/' + path;
 };
+var $GlobalWebIndex$cmd_extra$Cmd$Extra$perform = A2(
+	$elm$core$Basics$composeL,
+	$elm$core$Task$perform($elm$core$Basics$identity),
+	$elm$core$Task$succeed);
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 'Nothing') {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 'Nothing') {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.protocol;
+		if (_v0.$ === 'Http') {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url.fragment,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.query,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.port_,
+					_Utils_ap(http, url.host)),
+				url.path)));
+};
 var $author$project$Router$update = F3(
 	function (msg, model, externalModel) {
 		switch (msg.$) {
@@ -11483,6 +11536,12 @@ var $author$project$Router$update = F3(
 				if (msg.a.$ === 'Internal') {
 					var url = msg.a.a;
 					var matchedPath = A2($author$project$Router$matchRoute, model.config, url);
+					var _v1 = A2($elm$core$Debug$log, 'Router.update: case path', 'OnUrlRequest Internal');
+					var _v2 = A2(
+						$elm$core$Debug$log,
+						'Router.update: url',
+						$elm$url$Url$toString(url));
+					var _v3 = A2($elm$core$Debug$log, 'Router.update: matchedPath', matchedPath);
 					return _Utils_Tuple3(
 						_Utils_update(
 							model,
@@ -11494,6 +11553,8 @@ var $author$project$Router$update = F3(
 							$author$project$Router$pathToUrl(matchedPath)));
 				} else {
 					var href = msg.a.a;
+					var _v4 = A2($elm$core$Debug$log, 'Router.update: case path', 'OnUrlRequest External');
+					var _v5 = A2($elm$core$Debug$log, 'Router.update: href', href);
 					return _Utils_Tuple3(
 						model,
 						externalModel,
@@ -11502,23 +11563,21 @@ var $author$project$Router$update = F3(
 			case 'OnUrlChange':
 				var url = msg.a;
 				var matchedPath = A2($author$project$Router$matchRoute, model.config, url);
+				var _v6 = A2($elm$core$Debug$log, 'Router.update: case path', 'OnUrlChange');
+				var _v7 = A2(
+					$elm$core$Debug$log,
+					'Router.update: url',
+					$elm$url$Url$toString(url));
+				var _v8 = A2($elm$core$Debug$log, 'Router.update: matchedPath', matchedPath);
 				return _Utils_Tuple3(
 					_Utils_update(
 						model,
 						{currentPath: matchedPath}),
 					externalModel,
-					$elm$core$Platform$Cmd$none);
+					$GlobalWebIndex$cmd_extra$Cmd$Extra$perform(
+						$author$project$Router$Navigate(matchedPath)));
 			default:
-				var targetPath = msg.a;
-				return _Utils_Tuple3(
-					_Utils_update(
-						model,
-						{currentPath: targetPath}),
-					externalModel,
-					A2(
-						$elm$browser$Browser$Navigation$pushUrl,
-						model.navKey,
-						$author$project$Router$pathToUrl(targetPath)));
+				return _Utils_Tuple3(model, externalModel, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$update = F2(
@@ -11533,25 +11592,53 @@ var $author$project$Main$update = F2(
 				$author$project$Shared$Model(model));
 			var newRouter = _v2.a;
 			var routerCmd = _v2.c;
-			return _Utils_Tuple2(
-				$author$project$Shared$Model(
-					_Utils_update(
-						model,
-						{router: newRouter})),
-				A2($elm$core$Platform$Cmd$map, $author$project$Shared$RouterMsg, routerCmd));
+			var _v3 = A2($elm$core$Debug$log, 'Main.update: case path', 'RouterMsg');
+			if ((routerMsg.$ === 'Navigate') && (routerMsg.a === 'blocks')) {
+				var _v5 = A2($elm$core$Debug$log, 'Main.update: case path', 'RouterMsg -> Navigate blocks');
+				return _Utils_Tuple2(
+					$author$project$Shared$Model(
+						_Utils_update(
+							model,
+							{
+								blocks: $elm$core$Maybe$Just($author$project$Page$Blocks$initModel),
+								router: newRouter
+							})),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								A2($elm$core$Platform$Cmd$map, $author$project$Shared$RouterMsg, routerCmd),
+								A2($elm$core$Platform$Cmd$map, $author$project$Shared$BlocksMsg, $author$project$Page$Blocks$getBlocks)
+							])));
+			} else {
+				var _v6 = A2($elm$core$Debug$log, 'Main.update: case path', 'RouterMsg -> other');
+				var _v7 = A2(
+					$elm$core$Debug$log,
+					'Main.update: routerMsg in other',
+					$elm$core$Debug$toString(routerMsg));
+				var _v8 = A2($elm$core$Debug$log, 'Main.update: newRouter.currentPath in other', newRouter.currentPath);
+				return _Utils_Tuple2(
+					$author$project$Shared$Model(
+						_Utils_update(
+							model,
+							{router: newRouter})),
+					A2($elm$core$Platform$Cmd$map, $author$project$Shared$RouterMsg, routerCmd));
+			}
 		} else {
 			var blocksMsg = msg.a;
-			var _v3 = function () {
-				var _v4 = model.blocks;
-				if (_v4.$ === 'Just') {
-					var blocksModel = _v4.a;
+			var _v9 = function () {
+				var _v10 = model.blocks;
+				if (_v10.$ === 'Just') {
+					var blocksModel = _v10.a;
+					var _v11 = A2($elm$core$Debug$log, 'Main.update: case path', 'BlocksMsg -> Just blocksModel');
 					return A2($author$project$Page$Blocks$update, blocksMsg, blocksModel);
 				} else {
+					var _v12 = A2($elm$core$Debug$log, 'Main.update: case path', 'BlocksMsg -> Nothing');
 					return A2($author$project$Page$Blocks$update, blocksMsg, $author$project$Page$Blocks$initModel);
 				}
 			}();
-			var newBlocksModel = _v3.a;
-			var blocksCmd = _v3.b;
+			var newBlocksModel = _v9.a;
+			var blocksCmd = _v9.b;
+			var _v13 = A2($elm$core$Debug$log, 'Main.update: case path', 'BlocksMsg');
 			return _Utils_Tuple2(
 				$author$project$Shared$Model(
 					_Utils_update(
@@ -11564,7 +11651,7 @@ var $author$project$Main$update = F2(
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $author$project$Router$link = F3(
-	function (path, _v0, content) {
+	function (path, config, content) {
 		return A2(
 			$elm$html$Html$a,
 			_List_fromArray(

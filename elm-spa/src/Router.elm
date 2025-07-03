@@ -12,6 +12,8 @@ import Url exposing (Url)
 import Url.Parser as Parser exposing (Parser, (</>))
 import String
 import RouteConfig exposing (Config, RouteConfig, Path(..))
+import Debug
+import Cmd.Extra exposing (perform)
 
 type alias Model model msg =
     { currentPath : String
@@ -58,21 +60,30 @@ update msg model externalModel =
     case msg of
         OnUrlRequest (Browser.Internal url) ->
             let
+                _ = Debug.log "Router.update: case path" "OnUrlRequest Internal"
+                _ = Debug.log "Router.update: url" (Url.toString url)
                 matchedPath = matchRoute model.config url
+                _ = Debug.log "Router.update: matchedPath" matchedPath
             in
             ( { model | currentPath = matchedPath }, externalModel, Nav.pushUrl model.navKey (pathToUrl matchedPath) )
 
         OnUrlRequest (Browser.External href) ->
+            let
+                _ = Debug.log "Router.update: case path" "OnUrlRequest External"
+                _ = Debug.log "Router.update: href" href
+            in
             ( model, externalModel, Nav.load href )
 
         OnUrlChange url ->
             let
+                _ = Debug.log "Router.update: case path" "OnUrlChange"
+                _ = Debug.log "Router.update: url" (Url.toString url)
                 matchedPath = matchRoute model.config url
+                _ = Debug.log "Router.update: matchedPath" matchedPath
             in
-            ( { model | currentPath = matchedPath }, externalModel, Cmd.none )
+            ( { model | currentPath = matchedPath }, externalModel, perform (Navigate matchedPath) )
 
-        Navigate targetPath ->
-            ( { model | currentPath = targetPath }, externalModel, Nav.pushUrl model.navKey (pathToUrl targetPath) )
+        _ -> (model, externalModel, Cmd.none)
 
 view : Model model msg -> model -> Html msg
 view model externalModel =
@@ -85,7 +96,7 @@ navigate targetPath model =
     Nav.pushUrl model.navKey (pathToUrl targetPath)
 
 link : String -> Config model msg -> List (Html Msg) -> Html Msg
-link path _ content =
+link path config content =
     Html.a [ Html.Attributes.href (pathToUrl path), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
 
 matchRoute : Config model msg -> Url -> String
