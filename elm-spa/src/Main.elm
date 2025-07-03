@@ -9,6 +9,7 @@ import RouteConfig exposing (Config, Path(..))
 import Url exposing (Url)
 import Page.Blocks as Blocks
 import Page.Home as Home
+import Page.BlockSpotlight as BlockSpotlight
 import Shared exposing (Model(..), Msg(..), BlocksMsg(..))
 import Debug
 
@@ -19,6 +20,7 @@ main =
             Router.define ""
                 [ Home.routeConfig
                 , Blocks.routeConfig
+                , BlockSpotlight.routeConfig
                 ]
     in
     Browser.application
@@ -54,6 +56,8 @@ view (Model model) =
                 [ Router.link "" model.router.config [ text "Home" ] |> Html.map RouterMsg
                 , text " | "
                 , Router.link "blocks" model.router.config [ text "Blocks" ] |> Html.map RouterMsg
+                , text " | "
+                , Router.link "blocks/state_hash" model.router.config [ text "Blocks/state_hash" ] |> Html.map RouterMsg
                 ]
             , Router.view model.router (Model model)
             ]

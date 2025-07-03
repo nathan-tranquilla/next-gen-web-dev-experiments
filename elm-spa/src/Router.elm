@@ -28,7 +28,11 @@ findRouteConfig config path =
         (\routeConfig ->
             case routeConfig.path of
                 Static p -> p == path
-                Dynamic _ -> False
+                Dynamic dynamicParser ->
+                    let
+                        parsed = Parser.parse dynamicParser { protocol = Url.Http, host = "", port_ = Nothing, path = "/" ++ path, query = Nothing, fragment = Nothing }
+                    in
+                    Maybe.map (always True) parsed |> Maybe.withDefault False
                 CatchAll -> True
         )
         config.routes
