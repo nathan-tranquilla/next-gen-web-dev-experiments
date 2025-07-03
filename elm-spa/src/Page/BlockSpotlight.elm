@@ -9,7 +9,7 @@ view : Model -> Html Msg
 view (Model model) =
     div []
         [ text "Block Spotlight Page"
-        , div [] [ text ("Statehash: " ++ model.router.currentPath) ]
+        , div [] [ text ("Statehash: " ++ (List.head model.router.pathParams |> Maybe.withDefault "unknown")) ]
         ]
 
 routeConfig : RouteConfig Model Msg

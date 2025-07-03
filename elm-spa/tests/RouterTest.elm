@@ -2,13 +2,12 @@ module RouterTest exposing (suite)
 
 import Expect
 import Test exposing (..)
-import Router exposing (findRouteConfig, matchRoute)
-import RouteConfig exposing (Config, RouteConfig, Path(..))
+import Router exposing (findRouteConfig)
+import RouteConfig exposing (Path(..))
 import Page.Blocks as Blocks
 import Page.Home as Home
 import Page.BlockSpotlight as BlockSpotlight
-import Shared exposing (Model, Msg)
-import Url exposing (Url, Protocol(..))
+import Url exposing (Protocol(..))
 
 suite : Test
 suite =
@@ -106,5 +105,35 @@ suite =
                         matchedRoute = Router.matchRoute config url
                     in
                     Expect.equal "blocks/another-statehash" matchedRoute
+            ]
+        , describe "parsePathParams"
+            [ test "parses / to empty list" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                    in
+                    Expect.equal [] (Router.parsePathParams config url)
+            , test "parses /blocks to empty list" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                    in
+                    Expect.equal [] (Router.parsePathParams config url)
+            , test "parses /blocks/some-statehash to ['some-statehash']" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/some-statehash", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                    in
+                    Expect.equal ["some-statehash"] (Router.parsePathParams config url)
+            , test "parses /unknown to empty list" <|
+                \_ ->
+                    let
+                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/unknown", query = Nothing, fragment = Nothing }
+                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                    in
+                    Expect.equal [] (Router.parsePathParams config url)
             ]
         ]

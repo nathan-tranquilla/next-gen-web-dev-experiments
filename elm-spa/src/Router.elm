@@ -13,6 +13,7 @@ import Cmd.Extra exposing (perform)
 
 type alias Model model msg =
     { currentPath : String
+    , pathParams : List String
     , navKey : Nav.Key
     , config : Config model msg
     }
@@ -42,6 +43,30 @@ pathToUrl : String -> String
 pathToUrl path =
     "/" ++ path
 
+normalizePath : String -> String
+normalizePath path =
+    path
+        |> String.dropLeft (if String.startsWith "/" path then 1 else 0)
+        |> String.dropRight (if String.endsWith "/" path then 1 else 0)
+
+parsePathParams : Config model msg -> Url -> List String
+parsePathParams config url =
+    let
+        normalizedPath = normalizePath url.path
+        findParams routeConfig acc =
+            case acc of
+                Just params -> Just params
+                Nothing ->
+                    case routeConfig.path of
+                        Static _ -> Nothing
+                        Dynamic dynamicParser ->
+                            Parser.parse dynamicParser { url | path = "/" ++ normalizedPath }
+                                |> Maybe.map (\param -> [ param ])
+                        CatchAll -> Nothing
+    in
+    List.foldl findParams Nothing config.routes
+        |> Maybe.withDefault []
+
 define : String -> List (RouteConfig model msg) -> Config model msg
 define defaultPath routeConfigs =
     { routes = routeConfigs
@@ -52,8 +77,10 @@ init : Config model msg -> Url -> Nav.Key -> ( Model model msg, Cmd Msg )
 init config url key =
     let
         matchedPath = matchRoute config url
+        pathParams = parsePathParams config url
+        _ = Debug.log "Router.init: pathParams" pathParams
     in
-    ( { currentPath = matchedPath, navKey = key, config = config }, Cmd.none )
+    ( { currentPath = matchedPath, pathParams = pathParams, navKey = key, config = config }, Cmd.none )
 
 update : Msg -> Model model msg -> model -> ( Model model msg, model, Cmd Msg )
 update msg routerModel appModel =
@@ -64,8 +91,10 @@ update msg routerModel appModel =
                 _ = Debug.log "Router.update: url" (Url.toString url)
                 matchedPath = matchRoute routerModel.config url
                 _ = Debug.log "Router.update: matchedPath" matchedPath
+                pathParams = parsePathParams routerModel.config url
+                _ = Debug.log "Router.update: pathParams" pathParams
             in
-            ( { routerModel | currentPath = matchedPath }, appModel, Nav.pushUrl routerModel.navKey (pathToUrl matchedPath) )
+            ( { routerModel | currentPath = matchedPath, pathParams = pathParams }, appModel, Nav.pushUrl routerModel.navKey (pathToUrl matchedPath) )
 
         OnUrlRequest (Browser.External href) ->
             let
@@ -80,9 +109,10 @@ update msg routerModel appModel =
                 _ = Debug.log "Router.update: url" (Url.toString url)
                 matchedPath = matchRoute routerModel.config url
                 _ = Debug.log "Router.update: matchedPath" matchedPath
+                pathParams = parsePathParams routerModel.config url
+                _ = Debug.log "Router.update: pathParams" pathParams
             in
-            ( { routerModel | currentPath = matchedPath }, appModel, perform (Navigate matchedPath) )
-
+            ( { routerModel | currentPath = matchedPath, pathParams = pathParams }, appModel, perform (Navigate matchedPath) )
         _ -> (routerModel, appModel, Cmd.none)
 
 view : Model model msg -> model -> Html msg
@@ -126,9 +156,3 @@ matchRoute config url =
     in
     parsedPath
         |> Maybe.withDefault config.defaultPath
-
-normalizePath : String -> String
-normalizePath path =
-    path
-        |> String.dropLeft (if String.startsWith "/" path then 1 else 0)
-        |> String.dropRight (if String.endsWith "/" path then 1 else 0)
