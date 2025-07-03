@@ -102,7 +102,9 @@ link path _ content =
 matchRoute : Config model msg -> Url -> String
 matchRoute config url =
     let
-        normalizedPath = stripTrailingSlash (String.dropLeft 1 url.path)
+        _ = Debug.log "url" url
+        normalizedPath = normalizePath url.path
+        _ = Debug.log "normalizedPath" normalizedPath
         parser =
             Parser.oneOf
                 (List.map
@@ -114,7 +116,7 @@ matchRoute config url =
                                 else
                                     Parser.map path (Parser.s path)
                             Dynamic dynamicParser ->
-                                dynamicParser
+                                Parser.map (always normalizedPath) dynamicParser
                             CatchAll ->
                                 Parser.map normalizedPath Parser.top
                     )
@@ -125,9 +127,8 @@ matchRoute config url =
     parsedPath
         |> Maybe.withDefault config.defaultPath
 
-stripTrailingSlash : String -> String
-stripTrailingSlash str =
-    if String.endsWith "/" str then
-        String.dropRight 1 str
-    else
-        str
+normalizePath : String -> String
+normalizePath path =
+    path
+        |> String.dropLeft (if String.startsWith "/" path then 1 else 0)
+        |> String.dropRight (if String.endsWith "/" path then 1 else 0)

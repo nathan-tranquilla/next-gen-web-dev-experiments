@@ -39,6 +39,32 @@ suite =
                     in
                     Expect.equal Nothing (findRouteConfig config "unknown")
             ]
+        , describe "normalizePath"
+            [ test "normalizes '/blocks/' to 'blocks'" <|
+                \_ ->
+                    Expect.equal "blocks" (Router.normalizePath "/blocks/")
+            , test "normalizes '/blocks' to 'blocks'" <|
+                \_ ->
+                    Expect.equal "blocks" (Router.normalizePath "/blocks")
+            , test "normalizes 'blocks/' to 'blocks'" <|
+                \_ ->
+                    Expect.equal "blocks" (Router.normalizePath "blocks/")
+            , test "normalizes 'blocks' to 'blocks'" <|
+                \_ ->
+                    Expect.equal "blocks" (Router.normalizePath "blocks")
+            , test "normalizes '/blocks/state_hash/' to 'blocks/state_hash'" <|
+                \_ ->
+                    Expect.equal "blocks/state_hash" (Router.normalizePath "/blocks/state_hash/")
+            , test "normalizes '/blocks/state_hash' to 'blocks/state_hash'" <|
+                \_ ->
+                    Expect.equal "blocks/state_hash" (Router.normalizePath "/blocks/state_hash")
+            , test "normalizes 'blocks/state_hash/' to 'blocks/state_hash'" <|
+                \_ ->
+                    Expect.equal "blocks/state_hash" (Router.normalizePath "blocks/state_hash/")
+            , test "normalizes 'blocks/state_hash' to 'blocks/state_hash'" <|
+                \_ ->
+                    Expect.equal "blocks/state_hash" (Router.normalizePath "blocks/state_hash")
+            ]
         , describe "matchRoute"
             [ test "matches / to HomePage" <|
                 \_ ->
@@ -71,7 +97,7 @@ suite =
                         config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
                         matchedRoute = Router.matchRoute config url
                     in
-                    Expect.equal "some-statehash" matchedRoute
+                    Expect.equal "blocks/some-statehash" matchedRoute
             , test "matches /blocks/another-statehash to BlockSpotlight" <|
                 \_ ->
                     let
@@ -79,6 +105,6 @@ suite =
                         config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
                         matchedRoute = Router.matchRoute config url
                     in
-                    Expect.equal "another-statehash" matchedRoute
+                    Expect.equal "blocks/another-statehash" matchedRoute
             ]
         ]
