@@ -11530,12 +11530,12 @@ var $elm$url$Url$toString = function (url) {
 				url.path)));
 };
 var $author$project$Router$update = F3(
-	function (msg, model, externalModel) {
+	function (msg, routerModel, appModel) {
 		switch (msg.$) {
 			case 'OnUrlRequest':
 				if (msg.a.$ === 'Internal') {
 					var url = msg.a.a;
-					var matchedPath = A2($author$project$Router$matchRoute, model.config, url);
+					var matchedPath = A2($author$project$Router$matchRoute, routerModel.config, url);
 					var _v1 = A2($elm$core$Debug$log, 'Router.update: case path', 'OnUrlRequest Internal');
 					var _v2 = A2(
 						$elm$core$Debug$log,
@@ -11544,25 +11544,25 @@ var $author$project$Router$update = F3(
 					var _v3 = A2($elm$core$Debug$log, 'Router.update: matchedPath', matchedPath);
 					return _Utils_Tuple3(
 						_Utils_update(
-							model,
+							routerModel,
 							{currentPath: matchedPath}),
-						externalModel,
+						appModel,
 						A2(
 							$elm$browser$Browser$Navigation$pushUrl,
-							model.navKey,
+							routerModel.navKey,
 							$author$project$Router$pathToUrl(matchedPath)));
 				} else {
 					var href = msg.a.a;
 					var _v4 = A2($elm$core$Debug$log, 'Router.update: case path', 'OnUrlRequest External');
 					var _v5 = A2($elm$core$Debug$log, 'Router.update: href', href);
 					return _Utils_Tuple3(
-						model,
-						externalModel,
+						routerModel,
+						appModel,
 						$elm$browser$Browser$Navigation$load(href));
 				}
 			case 'OnUrlChange':
 				var url = msg.a;
-				var matchedPath = A2($author$project$Router$matchRoute, model.config, url);
+				var matchedPath = A2($author$project$Router$matchRoute, routerModel.config, url);
 				var _v6 = A2($elm$core$Debug$log, 'Router.update: case path', 'OnUrlChange');
 				var _v7 = A2(
 					$elm$core$Debug$log,
@@ -11571,13 +11571,13 @@ var $author$project$Router$update = F3(
 				var _v8 = A2($elm$core$Debug$log, 'Router.update: matchedPath', matchedPath);
 				return _Utils_Tuple3(
 					_Utils_update(
-						model,
+						routerModel,
 						{currentPath: matchedPath}),
-					externalModel,
+					appModel,
 					$GlobalWebIndex$cmd_extra$Cmd$Extra$perform(
 						$author$project$Router$Navigate(matchedPath)));
 			default:
-				return _Utils_Tuple3(model, externalModel, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple3(routerModel, appModel, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$update = F2(
@@ -11651,7 +11651,7 @@ var $author$project$Main$update = F2(
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $author$project$Router$link = F3(
-	function (path, config, content) {
+	function (path, _v0, content) {
 		return A2(
 			$elm$html$Html$a,
 			_List_fromArray(

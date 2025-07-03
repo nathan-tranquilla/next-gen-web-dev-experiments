@@ -56,34 +56,34 @@ init config url key =
     ( { currentPath = matchedPath, navKey = key, config = config }, Cmd.none )
 
 update : Msg -> Model model msg -> model -> ( Model model msg, model, Cmd Msg )
-update msg model externalModel =
+update msg routerModel appModel =
     case msg of
         OnUrlRequest (Browser.Internal url) ->
             let
                 _ = Debug.log "Router.update: case path" "OnUrlRequest Internal"
                 _ = Debug.log "Router.update: url" (Url.toString url)
-                matchedPath = matchRoute model.config url
+                matchedPath = matchRoute routerModel.config url
                 _ = Debug.log "Router.update: matchedPath" matchedPath
             in
-            ( { model | currentPath = matchedPath }, externalModel, Nav.pushUrl model.navKey (pathToUrl matchedPath) )
+            ( { routerModel | currentPath = matchedPath }, appModel, Nav.pushUrl routerModel.navKey (pathToUrl matchedPath) )
 
         OnUrlRequest (Browser.External href) ->
             let
                 _ = Debug.log "Router.update: case path" "OnUrlRequest External"
                 _ = Debug.log "Router.update: href" href
             in
-            ( model, externalModel, Nav.load href )
+            ( routerModel, appModel, Nav.load href )
 
         OnUrlChange url ->
             let
                 _ = Debug.log "Router.update: case path" "OnUrlChange"
                 _ = Debug.log "Router.update: url" (Url.toString url)
-                matchedPath = matchRoute model.config url
+                matchedPath = matchRoute routerModel.config url
                 _ = Debug.log "Router.update: matchedPath" matchedPath
             in
-            ( { model | currentPath = matchedPath }, externalModel, perform (Navigate matchedPath) )
+            ( { routerModel | currentPath = matchedPath }, appModel, perform (Navigate matchedPath) )
 
-        _ -> (model, externalModel, Cmd.none)
+        _ -> (routerModel, appModel, Cmd.none)
 
 view : Model model msg -> model -> Html msg
 view model externalModel =
@@ -96,7 +96,7 @@ navigate targetPath model =
     Nav.pushUrl model.navKey (pathToUrl targetPath)
 
 link : String -> Config model msg -> List (Html Msg) -> Html Msg
-link path config content =
+link path _ content =
     Html.a [ Html.Attributes.href (pathToUrl path), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
 
 matchRoute : Config model msg -> Url -> String
