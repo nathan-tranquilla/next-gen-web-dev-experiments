@@ -47,10 +47,10 @@ init routeConfig _ url key =
 
 view : Model -> Browser.Document Msg
 view (Model model) =
-    { title = "Elm App"
+    { title = "MINA Blockchain Explorer"
     , body =
         [ div [ class "container" ]
-            [ h1 [] [ text "Elm App" ]
+            [ h1 [] [ text "MINA Blockchain Explorer" ]
             , nav []
                 [ Router.link "" model.router.config [ text "Home" ] |> Html.map RouterMsg
                 , text " | "

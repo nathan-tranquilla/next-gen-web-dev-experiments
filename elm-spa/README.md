@@ -47,7 +47,7 @@ The initial version of `elm-router` focuses on core routing functionality:
 
 - **Static Pages**: Support for fixed paths (e.g., `/`, `/users`) to handle common navigation needs.
 - **Dynamic Pages**: Support for parameterized routes (e.g., `/users/:id`) to enable dynamic content, such as user profiles or detailed views.
-- **Simplicity**: Provide a minimal API (`Router.define`, `Router.init`, `Router.view`, `Router.update`) to get started quickly without overwhelming users.
+- **Simplicity**: Provide a minimal API (`Router.define`, `Router.init`, `Router.view`, `Router.update`, `Router.link`) to get started quickly without overwhelming users.
 
 This iteration prioritizes getting the basics right, ensuring developers can define and match routes reliably in a single-page application (SPA).
 
