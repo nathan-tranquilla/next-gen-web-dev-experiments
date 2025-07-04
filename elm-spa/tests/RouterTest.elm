@@ -13,31 +13,35 @@ suite : Test
 suite =
     describe "Router"
         [ describe "findRouteConfig"
-            [ test "matches '' to HomePage route" <|
-                \_ ->
-                    let
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                    in
-                    Expect.equal (Just Home.routeConfig) (findRouteConfig config "")
-            , test "matches 'blocks' to BlocksPage route" <|
-                \_ ->
-                    let
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                    in
-                    Expect.equal (Just Blocks.routeConfig) (findRouteConfig config "blocks")
-            , test "matches 'blocks/some-statehash' to BlockSpotlight route" <|
-                \_ ->
-                    let
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                    in
-                    Expect.equal (Just BlockSpotlight.routeConfig) (findRouteConfig config "blocks/some-statehash")
-            , test "returns Nothing for unknown path" <|
-                \_ ->
-                    let
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                    in
-                    Expect.equal Nothing (findRouteConfig config "unknown")
-            ]
+                [ test "matches '' to HomePage route" <|
+                    \_ ->
+                        let
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            url = { protocol = Url.Http, host = "", port_ = Nothing, path = "", query = Nothing, fragment = Nothing }
+                        in
+                        Expect.equal (Just Home.routeConfig) (findRouteConfig config url)
+                , test "matches 'blocks' to BlocksPage route" <|
+                    \_ ->
+                        let
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            url = { protocol = Url.Http, host = "", port_ = Nothing, path = "blocks", query = Nothing, fragment = Nothing }
+                        in
+                        Expect.equal (Just Blocks.routeConfig) (findRouteConfig config url)
+                , test "matches 'blocks/some-statehash' to BlockSpotlight route" <|
+                    \_ ->
+                        let
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            url = { protocol = Url.Http, host = "", port_ = Nothing, path = "blocks/some-statehash", query = Nothing, fragment = Nothing }
+                        in
+                        Expect.equal (Just BlockSpotlight.routeConfig) (findRouteConfig config url)
+                , test "returns Nothing for unknown path" <|
+                    \_ ->
+                        let
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            url = { protocol = Url.Http, host = "", port_ = Nothing, path = "unknown", query = Nothing, fragment = Nothing }
+                        in
+                        Expect.equal Nothing (findRouteConfig config url)
+                ]
         , describe "normalizePath"
             [ test "normalizes '/blocks/' to 'blocks'" <|
                 \_ ->

@@ -16,6 +16,7 @@ type alias Model model msg =
     , pathParams : List String
     , navKey : Nav.Key
     , config : RouterConfig model msg
+    , url: Url
     }
 
 type Msg
@@ -23,15 +24,15 @@ type Msg
     | OnUrlChange Url
     | Navigate String
 
-findRouteConfig : RouterConfig model msg -> String -> Maybe (RouteConfig model msg)
-findRouteConfig config path =
+findRouteConfig : RouterConfig model msg -> Url -> Maybe (RouteConfig model msg)
+findRouteConfig config url =
     List.filter
         (\routeConfig ->
             case routeConfig.path of
-                Static p -> p == path
+                Static p -> p == normalizePath url.path
                 Dynamic dynamicParser ->
                     let
-                        parsed = Parser.parse dynamicParser { protocol = Url.Http, host = "", port_ = Nothing, path = "/" ++ path, query = Nothing, fragment = Nothing }
+                        parsed = Parser.parse dynamicParser url
                     in
                     Maybe.map (always True) parsed |> Maybe.withDefault False
                 CatchAll -> True
@@ -80,7 +81,7 @@ init config url key =
         pathParams = parsePathParams config url
         _ = Debug.log "Router.init: pathParams" pathParams
     in
-    ( { currentPath = matchedPath, pathParams = pathParams, navKey = key, config = config }, Cmd.none )
+    ( { currentPath = matchedPath, pathParams = pathParams, navKey = key, config = config, url = url }, Cmd.none )
 
 update : Msg -> Model model msg -> model -> ( Model model msg, model, Cmd Msg )
 update msg routerModel appModel =
@@ -90,7 +91,7 @@ update msg routerModel appModel =
                 matchedPath = matchRoute routerModel.config url
                 pathParams = parsePathParams routerModel.config url
             in
-            ( { routerModel | currentPath = matchedPath, pathParams = pathParams }, appModel, Nav.pushUrl routerModel.navKey (pathToUrl matchedPath) )
+            ( { routerModel | currentPath = matchedPath, pathParams = pathParams, url = url }, appModel, Nav.pushUrl routerModel.navKey (pathToUrl matchedPath) )
 
         OnUrlRequest (Browser.External href) ->
             ( routerModel, appModel, Nav.load href )
@@ -100,12 +101,12 @@ update msg routerModel appModel =
                 matchedPath = matchRoute routerModel.config url
                 pathParams = parsePathParams routerModel.config url
             in
-            ( { routerModel | currentPath = matchedPath, pathParams = pathParams }, appModel, perform (Navigate matchedPath) )
+            ( { routerModel | currentPath = matchedPath, pathParams = pathParams, url = url }, appModel, perform (Navigate matchedPath) )
         _ -> (routerModel, appModel, Cmd.none)
 
 view : Model model msg -> model -> Html msg
 view routerModel appModel =
-    case findRouteConfig routerModel.config routerModel.currentPath of
+    case findRouteConfig routerModel.config routerModel.url of
         Just routeConfig -> routeConfig.view appModel
         Nothing -> Html.text "Route not found"
 
