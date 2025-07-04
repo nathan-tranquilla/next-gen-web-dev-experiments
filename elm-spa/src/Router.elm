@@ -7,7 +7,7 @@ import Html.Attributes
 import Url exposing (Url)
 import Url.Parser as Parser exposing ((</>))
 import String
-import RouteConfig exposing (Config, RouteConfig, Path(..))
+import RouteConfig exposing (RouterConfig, RouteConfig, Path(..))
 import Debug
 import Cmd.Extra exposing (perform)
 
@@ -15,7 +15,7 @@ type alias Model model msg =
     { currentPath : String
     , pathParams : List String
     , navKey : Nav.Key
-    , config : Config model msg
+    , config : RouterConfig model msg
     }
 
 type Msg
@@ -23,7 +23,7 @@ type Msg
     | OnUrlChange Url
     | Navigate String
 
-findRouteConfig : Config model msg -> String -> Maybe (RouteConfig model msg)
+findRouteConfig : RouterConfig model msg -> String -> Maybe (RouteConfig model msg)
 findRouteConfig config path =
     List.filter
         (\routeConfig ->
@@ -49,7 +49,7 @@ normalizePath path =
         |> String.dropLeft (if String.startsWith "/" path then 1 else 0)
         |> String.dropRight (if String.endsWith "/" path then 1 else 0)
 
-parsePathParams : Config model msg -> Url -> List String
+parsePathParams : RouterConfig model msg -> Url -> List String
 parsePathParams config url =
     let
         normalizedPath = normalizePath url.path
@@ -67,13 +67,13 @@ parsePathParams config url =
     List.foldl findParams Nothing config.routes
         |> Maybe.withDefault []
 
-define : String -> List (RouteConfig model msg) -> Config model msg
+define : String -> List (RouteConfig model msg) -> RouterConfig model msg
 define defaultPath routeConfigs =
     { routes = routeConfigs
     , defaultPath = defaultPath
     }
 
-init : Config model msg -> Url -> Nav.Key -> ( Model model msg, Cmd Msg )
+init : RouterConfig model msg -> Url -> Nav.Key -> ( Model model msg, Cmd Msg )
 init config url key =
     let
         matchedPath = matchRoute config url
@@ -113,11 +113,11 @@ navigate : String -> Model model msg -> Cmd Msg
 navigate targetPath model =
     Nav.pushUrl model.navKey (pathToUrl targetPath)
 
-link : String -> Config model msg -> List (Html Msg) -> Html Msg
+link : String -> RouterConfig model msg -> List (Html Msg) -> Html Msg
 link path _ content =
     Html.a [ Html.Attributes.href (pathToUrl path), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
 
-matchRoute : Config model msg -> Url -> String
+matchRoute : RouterConfig model msg -> Url -> String
 matchRoute config url =
     let
         normalizedPath = normalizePath url.path

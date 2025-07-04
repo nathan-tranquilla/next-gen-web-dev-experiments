@@ -1,9 +1,9 @@
-module RouteConfig exposing (Config, RouteConfig, Path(..), string)
+module RouteConfig exposing (RouterConfig, RouteConfig, Path(..), string)
 
 import Html exposing (Html)
 import Url.Parser as Parser exposing (Parser)
 
-type alias Config model msg =
+type alias RouterConfig model msg =
     { routes : List (RouteConfig model msg)
     , defaultPath : String
     }

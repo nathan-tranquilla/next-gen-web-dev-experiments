@@ -5,7 +5,7 @@ import Browser.Navigation as Nav
 import Router
 import Html exposing (div, h1, nav, text)
 import Html.Attributes exposing (class)
-import RouteConfig exposing (Config, Path(..))
+import RouteConfig exposing (RouterConfig, Path(..))
 import Url exposing (Url)
 import Page.Blocks as Blocks
 import Page.Home as Home
@@ -31,7 +31,7 @@ main =
         , onUrlChange = RouterMsg << Router.OnUrlChange
         }
 
-init : Config Model Msg -> () -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init : RouterConfig Model Msg -> () -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init routeConfig _ url key =
     let
         ( routerModel, routerCmd ) = Router.init routeConfig url key
