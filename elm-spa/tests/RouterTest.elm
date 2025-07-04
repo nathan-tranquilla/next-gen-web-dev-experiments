@@ -3,11 +3,20 @@ module RouterTest exposing (suite)
 import Expect
 import Test exposing (..)
 import Router exposing (findRouteConfig)
-import RouteConfig exposing (Path(..))
+import RouteConfig exposing (..)
 import Page.Blocks as Blocks
 import Page.Home as Home
 import Page.BlockSpotlight as BlockSpotlight
+import Url.Parser as Parser exposing ((</>))
 import Url exposing (Protocol(..))
+import Html
+
+-- Mock RouteConfig for Users dynamic route
+usersRouteConfig : RouteConfig model msg
+usersRouteConfig =
+    { path = Dynamic (Parser.s "users" </> Parser.string)
+    , view = \_ -> Html.div [] []  -- Minimal stub
+    }
 
 suite : Test
 suite =
@@ -69,47 +78,55 @@ suite =
                     Expect.equal "blocks/state_hash" (Router.normalizePath "blocks/state_hash")
             ]
         , describe "matchRoute"
-            [ test "matches / to HomePage" <|
-                \_ ->
-                    let
-                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "", query = Nothing, fragment = Nothing }
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                        matchedRoute = Router.matchRoute config url
-                    in
-                    Expect.equal "" matchedRoute
-            , test "matches /blocks to BlocksPage" <|
-                \_ ->
-                    let
-                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks", query = Nothing, fragment = Nothing }
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                        matchedRoute = Router.matchRoute config url
-                    in
-                    Expect.equal "blocks" matchedRoute
-            , test "matches /blocks/ to BlocksPage" <|
-                \_ ->
-                    let
-                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/", query = Nothing, fragment = Nothing }
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                        matchedRoute = Router.matchRoute config url
-                    in
-                    Expect.equal "blocks" matchedRoute
-            , test "matches /blocks/some-statehash to BlockSpotlight" <|
-                \_ ->
-                    let
-                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/some-statehash", query = Nothing, fragment = Nothing }
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                        matchedRoute = Router.matchRoute config url
-                    in
-                    Expect.equal "blocks/some-statehash" matchedRoute
-            , test "matches /blocks/another-statehash to BlockSpotlight" <|
-                \_ ->
-                    let
-                        url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/another-statehash", query = Nothing, fragment = Nothing }
-                        config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
-                        matchedRoute = Router.matchRoute config url
-                    in
-                    Expect.equal "blocks/another-statehash" matchedRoute
-            ]
+                [ test "matches / to HomePage" <|
+                    \_ ->
+                        let
+                            url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "", query = Nothing, fragment = Nothing }
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            matchedRoute = Router.matchRoute config url
+                        in
+                        Expect.equal "" matchedRoute
+                , test "matches /blocks to BlocksPage" <|
+                    \_ ->
+                        let
+                            url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks", query = Nothing, fragment = Nothing }
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            matchedRoute = Router.matchRoute config url
+                        in
+                        Expect.equal "blocks" matchedRoute
+                , test "matches /blocks/ to BlocksPage" <|
+                    \_ ->
+                        let
+                            url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/", query = Nothing, fragment = Nothing }
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            matchedRoute = Router.matchRoute config url
+                        in
+                        Expect.equal "blocks" matchedRoute
+                , test "matches /blocks/some-statehash to BlockSpotlight" <|
+                    \_ ->
+                        let
+                            url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/some-statehash", query = Nothing, fragment = Nothing }
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            matchedRoute = Router.matchRoute config url
+                        in
+                        Expect.equal "blocks/some-statehash" matchedRoute
+                , test "matches /blocks/another-statehash to BlockSpotlight" <|
+                    \_ ->
+                        let
+                            url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/blocks/another-statehash", query = Nothing, fragment = Nothing }
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig ]
+                            matchedRoute = Router.matchRoute config url
+                        in
+                        Expect.equal "blocks/another-statehash" matchedRoute
+                , test "matches /users/123 to Users dynamic route" <|
+                    \_ ->
+                        let
+                            url = { protocol = Url.Http, host = "localhost", port_ = Just 8000, path = "/users/123", query = Nothing, fragment = Nothing }
+                            config = Router.define "" [ Home.routeConfig, Blocks.routeConfig, BlockSpotlight.routeConfig, usersRouteConfig ]
+                            matchedRoute = Router.matchRoute config url
+                        in
+                        Expect.equal "users/123" matchedRoute
+                ]
         , describe "parsePathParams"
             [ test "parses / to empty list" <|
                 \_ ->
