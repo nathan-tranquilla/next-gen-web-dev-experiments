@@ -1,0 +1,11 @@
+desc "Clean the elm-stuff directory"
+task :clean do
+  sh "rm -rf elm-stuff"
+end
+
+desc "Start the Elm app with elm-live"
+task :start => :clean do
+  sh "elm-live src/Main.elm --start-page=templates/tailwind.html --pushstate -- --output=.build/out.js --debug"
+end
+
+task default: :start

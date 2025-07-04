@@ -19,6 +19,7 @@ nodejs.pkg-path = "nodejs"
 elm.pkg-path = "elmPackages.elm"
 elm-live.pkg-path = "elmPackages.elm-live"
 elm-test.pkg-path = "elmPackages.elm-test"
+ruby.pkg-path = "ruby"
 # gum.pkg-path = "gum"
 # gum.version = "^0.14.5"
 
