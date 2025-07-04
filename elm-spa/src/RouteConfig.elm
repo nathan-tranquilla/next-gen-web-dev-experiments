@@ -1,7 +1,7 @@
-module RouteConfig exposing (RouterConfig, RouteConfig, Path(..), string)
+module RouteConfig exposing (RouterConfig, RouteConfig, Path(..))
 
 import Html exposing (Html)
-import Url.Parser as Parser exposing (Parser)
+import Url.Parser exposing (Parser)
 
 type alias RouterConfig model msg =
     { routes : List (RouteConfig model msg)
@@ -17,7 +17,3 @@ type Path
     = Static String
     | Dynamic (Parser (String -> String) String)
     | CatchAll
-
-string : (String -> String) -> Path
-string constructor =
-    Dynamic (Parser.map constructor Parser.string)
