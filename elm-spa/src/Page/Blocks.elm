@@ -1,11 +1,13 @@
 module Page.Blocks exposing (initModel, update, view, routeConfig, getBlocks)
 
-import Html exposing (Html, div, text, ul, li)
+import Html exposing (Html, div, text, ul, li, table, tr, td, th, thead, tbody, a)
 import Http
 import Json.Decode as Decode exposing (Decoder, field, string, int, bool, nullable)
 import Json.Encode as Encode
 import RouteConfig exposing (RouteConfig, Path(..))
 import Shared exposing (Model(..), Msg(..), Block, BlocksMsg(..))
+import Html.Attributes exposing (class, href)
+import Router
 
 type alias BlocksModel =
     { blocks : List Block
@@ -76,31 +78,42 @@ blockDecoder =
 
 view : Model -> Html Msg
 view (Model model) =
-    case model.blocks of
-        Just blocksModel ->
-            div []
-                [ text "Blocks Page - Latest Blocks"
-                , case blocksModel.error of
+    div [ class "flex justify-center my-8" ]
+        [ case model.blocks of
+            Just blocksModel ->
+                case blocksModel.error of
                     Just error ->
                         div [] [ text ("Error: " ++ error) ]
                     Nothing ->
                         if List.isEmpty blocksModel.blocks then
                             div [] [ text "Loading..." ]
                         else
-                            ul []
-                                (List.map viewBlock blocksModel.blocks)
-                ]
-        Nothing ->
-            div [] [ text "Loading..." ]
+                            table [ class "table-auto border-collapse border border-gray-300 w-full" ]
+                                [ thead []
+                                    [ tr []
+                                        [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Height" ]
+                                        , th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "StateHash" ]
+                                        , th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Canonical" ]
+                                        , th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Coinbase" ]
+                                        , th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Fees" ]
+                                        ]
+                                    ]
+                                , tbody []
+                                    (List.map viewBlock blocksModel.blocks)
+                                ]
+            Nothing ->
+                div [] [ text "Loading..." ]
+        ]
 
 viewBlock : Block -> Html Msg
 viewBlock block =
-    li []
-        [ text ("Height: " ++ String.fromInt block.blockHeight)
-        , text ("StateHash: " ++ block.stateHash)
-        , text ("Canonical: " ++ (if block.canonical then "Yes" else "No"))
-        , text ("Coinbase: " ++ (Maybe.withDefault "N/A" block.coinbaseReceiverUsername))
-        , text ("Fees: " ++ block.snarkFees)
+    tr []
+        [ td [ class "border border-gray-300 px-4 py-2" ] [ text (String.fromInt block.blockHeight) ]
+        , td [ class "border border-gray-300 px-4 py-2" ]
+            [ a [ href ("/blocks/" ++ block.stateHash), class "text-blue-500 hover:underline" ] [ text block.stateHash ] ]
+        , td [ class "border border-gray-300 px-4 py-2" ] [ text (if block.canonical then "Yes" else "No") ]
+        , td [ class "border border-gray-300 px-4 py-2" ] [ text (Maybe.withDefault "N/A" block.coinbaseReceiverUsername) ]
+        , td [ class "border border-gray-300 px-4 py-2" ] [ text block.snarkFees ]
         ]
 
 routeConfig : RouteConfig Model Msg

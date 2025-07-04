@@ -112,10 +112,6 @@ navigate : String -> Model model msg -> Cmd Msg
 navigate targetPath model =
     Nav.pushUrl model.navKey (pathToUrl targetPath)
 
-link : String -> RouterConfig model msg -> List (Html Msg) -> Html Msg
-link path _ content =
-    Html.a [ Html.Attributes.href (pathToUrl path), Html.Attributes.attribute "onclick" "event.preventDefault()" ] content
-
 matchRoute : RouterConfig model msg -> Url -> String
 matchRoute config url =
     let

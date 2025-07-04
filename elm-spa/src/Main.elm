@@ -3,8 +3,8 @@ module Main exposing (main)
 import Browser
 import Browser.Navigation as Nav
 import Router
-import Html exposing (div, h1, nav, text)
-import Html.Attributes exposing (class)
+import Html exposing (div, h1, nav, text, a)
+import Html.Attributes exposing (class, href)
 import RouteConfig exposing (RouterConfig, Path(..))
 import Url exposing (Url)
 import Page.Blocks as Blocks
@@ -49,12 +49,11 @@ view : Model -> Browser.Document Msg
 view (Model model) =
     { title = "MINA Blockchain Explorer"
     , body =
-        [ div [ class "container" ]
-            [ h1 [] [ text "MINA Blockchain Explorer" ]
-            , nav []
-                [ Router.link "" model.router.config [ text "Home" ] |> Html.map RouterMsg
-                , text " | "
-                , Router.link "blocks" model.router.config [ text "Blocks" ] |> Html.map RouterMsg
+        [ div [ class "my-2 flex flex-col justify-start align-center w-full" ]
+            [ h1 [ class "text-xl flex justify-center" ] [ text "MINA Blockchain Explorer" ]
+            , nav [ class "flex justify-center my-6" ]
+                [ a [ href "/", class "text-blue-600 mx-2 hover:underline" ] [ text "Home" ]
+                , a [ href "/blocks", class "text-blue-600 mx-2 hover:underline" ] [ text "Blocks" ]
                 ]
             , Router.view model.router (Model model)
             ]
