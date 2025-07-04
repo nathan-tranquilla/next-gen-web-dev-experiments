@@ -87,30 +87,18 @@ update msg routerModel appModel =
     case msg of
         OnUrlRequest (Browser.Internal url) ->
             let
-                _ = Debug.log "Router.update: case path" "OnUrlRequest Internal"
-                _ = Debug.log "Router.update: url" (Url.toString url)
                 matchedPath = matchRoute routerModel.config url
-                _ = Debug.log "Router.update: matchedPath" matchedPath
                 pathParams = parsePathParams routerModel.config url
-                _ = Debug.log "Router.update: pathParams" pathParams
             in
             ( { routerModel | currentPath = matchedPath, pathParams = pathParams }, appModel, Nav.pushUrl routerModel.navKey (pathToUrl matchedPath) )
 
         OnUrlRequest (Browser.External href) ->
-            let
-                _ = Debug.log "Router.update: case path" "OnUrlRequest External"
-                _ = Debug.log "Router.update: href" href
-            in
             ( routerModel, appModel, Nav.load href )
 
         OnUrlChange url ->
             let
-                _ = Debug.log "Router.update: case path" "OnUrlChange"
-                _ = Debug.log "Router.update: url" (Url.toString url)
                 matchedPath = matchRoute routerModel.config url
-                _ = Debug.log "Router.update: matchedPath" matchedPath
                 pathParams = parsePathParams routerModel.config url
-                _ = Debug.log "Router.update: pathParams" pathParams
             in
             ( { routerModel | currentPath = matchedPath, pathParams = pathParams }, appModel, perform (Navigate matchedPath) )
         _ -> (routerModel, appModel, Cmd.none)
@@ -132,9 +120,7 @@ link path _ content =
 matchRoute : Config model msg -> Url -> String
 matchRoute config url =
     let
-        _ = Debug.log "url" url
         normalizedPath = normalizePath url.path
-        _ = Debug.log "normalizedPath" normalizedPath
         parser =
             Parser.oneOf
                 (List.map
