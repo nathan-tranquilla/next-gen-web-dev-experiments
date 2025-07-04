@@ -8,7 +8,6 @@ import Url exposing (Url)
 import Url.Parser as Parser exposing ((</>))
 import String
 import RouteConfig exposing (RouterConfig, RouteConfig, Path(..))
-import Debug
 import Cmd.Extra exposing (perform)
 
 type alias Model model msg =
@@ -79,7 +78,6 @@ init config url key =
     let
         matchedPath = matchRoute config url
         pathParams = parsePathParams config url
-        _ = Debug.log "Router.init: pathParams" pathParams
     in
     ( { currentPath = matchedPath, pathParams = pathParams, navKey = key, config = config, url = url }, Cmd.none )
 
