@@ -3,7 +3,6 @@ module Router exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Html exposing (Html)
-import Html.Attributes
 import Url exposing (Url)
 import Url.Parser as Parser exposing ((</>))
 import String

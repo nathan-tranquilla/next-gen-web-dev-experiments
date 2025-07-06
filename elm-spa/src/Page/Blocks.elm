@@ -1,13 +1,12 @@
 module Page.Blocks exposing (initModel, update, view, routeConfig, getBlocks)
 
-import Html exposing (Html, div, text, ul, li, table, tr, td, th, thead, tbody, a)
+import Html exposing (Html, div, text, table, tr, td, th, thead, tbody, a)
 import Http
 import Json.Decode as Decode exposing (Decoder, field, string, int, bool, nullable)
 import Json.Encode as Encode
 import RouteConfig exposing (RouteConfig, Path(..))
 import Shared exposing (Model(..), Msg(..), Block, BlocksMsg(..))
 import Html.Attributes exposing (class, href)
-import Router
 
 type alias BlocksModel =
     { blocks : List Block
