@@ -19,6 +19,8 @@ type alias Block =
     , stateHash : String
     , coinbaseReceiverUsername : Maybe String
     , snarkFees : String
+    , epoch : Int
+    , slot : Int
     }
 
 initModel : Model
@@ -63,7 +65,7 @@ getBlocks stateHash =
     Http.post
         { url = "https://api.minasearch.com/graphql"
         , body = Http.jsonBody (Encode.object [ ( "query", Encode.string (
-            "{ blocks(limit: 1, query: { stateHash: \"" ++ stateHash ++ "\" }) { canonical blockHeight stateHash coinbaseReceiverUsername snarkFees } }"
+            "{ blocks(limit: 1, query: { stateHash: \"" ++ stateHash ++ "\" }) { canonical blockHeight stateHash coinbaseReceiverUsername snarkFees protocolState { consensusState { slot epoch } } } }"
         )) ])
         , expect = Http.expectJson GotBlocks blocksDecoder
         }   
@@ -74,12 +76,14 @@ blocksDecoder =
 
 blockDecoder : Decoder Block
 blockDecoder =
-    Decode.map5 Block
+    Decode.map7 Block
         (field "canonical" bool)
         (field "blockHeight" int)
         (field "stateHash" string)
         (field "coinbaseReceiverUsername" (nullable string))
         (field "snarkFees" string)
+        (field "protocolState" (field "consensusState" (field "epoch" int)))
+        (field "protocolState" (field "consensusState" (field "slot" int)))
 
 view : Model -> Html msg
 view model =
@@ -112,7 +116,22 @@ view model =
                             [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Snark Fees" ]
                             , td [ class "border border-gray-300 px-4 py-2" ] [ text block.snarkFees ]
                             ]
+                        , tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Epoch" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text (String.fromInt block.epoch) ]
+                            ]
+                        , tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Slot" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text (String.fromInt block.slot) ]
+                            ]
                         ]
                     ]
+        , case model.error of
+            Just error ->
+                div [ class "text-red-500 mt-4" ] [ text ("Error: " ++ error) ]
+            Nothing ->
+                text ""
         ]
+        
+        
 
