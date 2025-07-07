@@ -61,7 +61,7 @@ routeParser =
   Parser.oneOf
     [ Parser.map Home Parser.top
     , Parser.map Blocks (Parser.s "blocks")
-    , Parser.map BlockSpotlight (Parser.s "blocks" </> Parser.string)
+    , Parser.map BlockSpotlight (Parser.s "blocks" </> Parser.string) -- /blocks/3NLoLCvmERrBmgcHufCScQKr19jr2PtN9CzvDpPHr13S8YrDnvR8
     ]
 
 
