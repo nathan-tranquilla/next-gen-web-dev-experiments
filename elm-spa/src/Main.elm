@@ -35,6 +35,7 @@ type alias Model =
   , url : Url.Url
   , currentRoute: Route
   , blocksPage: Page.Blocks.Model
+  , blockSpotlightPage: Page.BlockSpotlight.Model
   }
 
 
@@ -44,11 +45,13 @@ init _ url key =
         parsedRoute = Parser.parse routeParser url |> Maybe.withDefault Home
         cmd = case parsedRoute of
             Blocks ->
-                Page.Blocks.getBlocks
+                Cmd.map BlocksPageMsg Page.Blocks.getBlocks
+            BlockSpotlight stateHash ->
+                Cmd.map BlockSpotlightPageMsg (Page.BlockSpotlight.getBlocks stateHash)
             _ -> 
                 Cmd.none
     in
-    ( Model key url parsedRoute Page.Blocks.initModel, Cmd.map BlocksPageMsg cmd )
+    ( Model key url parsedRoute Page.Blocks.initModel Page.BlockSpotlight.initModel, cmd )
 
 -- ROUTE CONFIG
 type Route
@@ -72,6 +75,7 @@ type Msg
   = LinkClicked Browser.UrlRequest
   | UrlChanged Url.Url
   | BlocksPageMsg Page.Blocks.Msg
+  | BlockSpotlightPageMsg Page.BlockSpotlight.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,13 +98,13 @@ update msg model =
             parsedRoute = Parser.parse routeParser url |> Maybe.withDefault Home
             cmd = case parsedRoute of
                 Blocks ->
-                    Page.Blocks.getBlocks
+                    Cmd.map BlocksPageMsg Page.Blocks.getBlocks
+                BlockSpotlight stateHash ->
+                    Cmd.map BlockSpotlightPageMsg (Page.BlockSpotlight.getBlocks stateHash)
                 _ -> 
                     Cmd.none
         in
-        ( { model | url = url, currentRoute = parsedRoute }
-        , cmd |> Cmd.map BlocksPageMsg
-        )
+        ( { model | url = url, currentRoute = parsedRoute } , cmd )
     BlocksPageMsg blocksMsg ->
             let
                 (updatedBlocksModel, blocksCmd) =
@@ -108,6 +112,14 @@ update msg model =
             in
             ( { model | blocksPage = updatedBlocksModel }
             , Cmd.map BlocksPageMsg blocksCmd
+            )
+    BlockSpotlightPageMsg spotlightMsg ->
+            let
+                (upatedModel, cmd) =
+                    Page.BlockSpotlight.update spotlightMsg model.blockSpotlightPage
+            in
+            ( { model | blockSpotlightPage = upatedModel }
+            , Cmd.map BlockSpotlightPageMsg cmd
             )
         
 
@@ -144,7 +156,7 @@ viewRoute route model =
     case route of
         Blocks -> Page.Blocks.view model.blocksPage
         Home -> Page.Home.view
-        BlockSpotlight stateHash -> Page.BlockSpotlight.view stateHash
+        BlockSpotlight _ -> Page.BlockSpotlight.view model.blockSpotlightPage
     
 
 viewLink : String -> String -> Html msg

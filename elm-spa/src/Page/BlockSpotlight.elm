@@ -1,10 +1,10 @@
-module Page.BlockSpotlight exposing (view)
+module Page.BlockSpotlight exposing (view, Msg(..), Model, getBlocks, update, initModel)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html, div, text, table, tr, td, th, thead, tbody)
 import Http
 import Json.Decode as Decode exposing (Decoder, field, string, int, bool, nullable)
 import Json.Encode as Encode
-
+import Html.Attributes exposing (class)
 
 type alias Model = { block : Maybe Block
     , error : Maybe String }
@@ -63,7 +63,7 @@ getBlocks stateHash =
     Http.post
         { url = "https://api.minasearch.com/graphql"
         , body = Http.jsonBody (Encode.object [ ( "query", Encode.string (
-            "{ blocks(limit: 1, stateHash: \"" ++ stateHash ++ "\") { canonical blockHeight stateHash coinbaseReceiverUsername snarkFees } }"
+            "{ blocks(limit: 1, query: { stateHash: \"" ++ stateHash ++ "\" }) { canonical blockHeight stateHash coinbaseReceiverUsername snarkFees } }"
         )) ])
         , expect = Http.expectJson GotBlocks blocksDecoder
         }   
@@ -81,10 +81,38 @@ blockDecoder =
         (field "coinbaseReceiverUsername" (nullable string))
         (field "snarkFees" string)
 
-view : String -> Html msg
-view stateHash=
-    div []
+view : Model -> Html msg
+view model =
+    div [ class "block-spotlight-page" ]
         [ text "Block Spotlight Page"
-        , div [] [ text ("Statehash: " ++ stateHash) ]
+        , case model.block of
+            Nothing ->
+                div [] [ text "Loading block data..." ]
+
+            Just block ->
+                table [ class "table-auto border-collapse border border-gray-300 w-full" ]
+                    [ tbody []
+                        [ tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Canonical" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text (if block.canonical then "Yes" else "No") ]
+                            ]
+                        , tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Block Height" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text (String.fromInt block.blockHeight) ]
+                            ]
+                        , tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "State Hash" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text block.stateHash ]
+                            ]
+                        , tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Coinbase Receiver Username" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text (Maybe.withDefault "N/A" block.coinbaseReceiverUsername) ]
+                            ]
+                        , tr []
+                            [ th [ class "border border-gray-300 px-4 py-2 text-left" ] [ text "Snark Fees" ]
+                            , td [ class "border border-gray-300 px-4 py-2" ] [ text block.snarkFees ]
+                            ]
+                        ]
+                    ]
         ]
 
