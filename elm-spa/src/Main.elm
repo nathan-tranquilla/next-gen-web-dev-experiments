@@ -9,6 +9,7 @@ import Url.Parser as Parser exposing ((</>))
 import Url.Parser as Parser
 import Page.Home
 import Page.Blocks
+import Page.BlockSpotlight
 import Debug
 
 -- MAIN
@@ -32,7 +33,7 @@ main =
 type alias Model =
   { key : Nav.Key
   , url : Url.Url
-  , route: Route
+  , currentRoute: Route
   , blocksPage: Page.Blocks.Model
   }
 
@@ -97,14 +98,13 @@ update msg model =
                 _ -> 
                     Cmd.none
         in
-        ( { model | url = url, route = parsedRoute }
+        ( { model | url = url, currentRoute = parsedRoute }
         , cmd |> Cmd.map BlocksPageMsg
         )
     BlocksPageMsg blocksMsg ->
             let
                 (updatedBlocksModel, blocksCmd) =
                     Page.Blocks.update blocksMsg model.blocksPage
-                _ = Debug.log "Updated Blocks Model" { model | blocksPage = updatedBlocksModel }
             in
             ( { model | blocksPage = updatedBlocksModel }
             , Cmd.map BlocksPageMsg blocksCmd
@@ -135,7 +135,7 @@ view model =
                 , a [ href "/blocks", class "text-blue-600 mx-2 hover:underline" ] [ text "Blocks" ]
                 ]
             ]
-        , viewRoute model.route model
+        , viewRoute model.currentRoute model
         ]
     }
 
@@ -144,7 +144,7 @@ viewRoute route model =
     case route of
         Blocks -> Page.Blocks.view model.blocksPage
         Home -> Page.Home.view
-        _ -> Page.Home.view
+        BlockSpotlight stateHash -> Page.BlockSpotlight.view stateHash
     
 
 viewLink : String -> String -> Html msg
