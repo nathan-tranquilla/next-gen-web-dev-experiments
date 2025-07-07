@@ -1,52 +1,131 @@
-module Main exposing (main)
+module Main exposing (..)
 
 import Browser
 import Browser.Navigation as Nav
-import Router
-import Html exposing (div, h1, nav, text, a)
-import Html.Attributes exposing (class, href)
-import RouteConfig exposing (RouterConfig, Path(..))
-import Url exposing (Url)
-import Page.Blocks as Blocks
-import Page.Home as Home
-import Page.BlockSpotlight as BlockSpotlight
-import Shared exposing (Model(..), Msg(..), BlocksMsg(..))
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Url
+import Url.Parser as Parser exposing ((</>))
+import Url.Parser as Parser
+import Page.Home
+import Page.Blocks
+import Debug
+
+-- MAIN
+
 
 main : Program () Model Msg
 main =
-    let
-        routeConfig =
-            Router.define ""
-                [ Home.routeConfig
-                , Blocks.routeConfig
-                , BlockSpotlight.routeConfig
-                ]
-    in
-    Browser.application
-        { init = init routeConfig
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
-        , onUrlRequest = RouterMsg << Router.OnUrlRequest
-        , onUrlChange = RouterMsg << Router.OnUrlChange
-        }
+  Browser.application
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    , onUrlChange = UrlChanged
+    , onUrlRequest = LinkClicked
+    }
 
-init : RouterConfig Model Msg -> () -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init routeConfig _ url key =
+
+-- MODEL
+
+
+type alias Model =
+  { key : Nav.Key
+  , url : Url.Url
+  , route: Route
+  , blocksPage: Page.Blocks.Model
+  }
+
+
+init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init _ url key =
     let
-        ( routerModel, routerCmd ) = Router.init routeConfig url key
-        initCmd =
-            if routerModel.currentPath == "blocks" then
-                Cmd.map BlocksMsg Blocks.getBlocks
-            else
+        parsedRoute = Parser.parse routeParser url |> Maybe.withDefault Home
+        cmd = case parsedRoute of
+            Blocks ->
+                Page.Blocks.getBlocks
+            _ -> 
                 Cmd.none
     in
-    ( Model { router = routerModel, blocks = Nothing }
-    , Cmd.batch [ Cmd.map RouterMsg routerCmd, initCmd ]
-    )
+    ( Model key url parsedRoute Page.Blocks.initModel, Cmd.map BlocksPageMsg cmd )
+
+-- ROUTE CONFIG
+type Route
+  = Home
+  | Blocks
+  | BlockSpotlight String
+
+routeParser : Parser.Parser (Route -> a) a
+routeParser =
+  Parser.oneOf
+    [ Parser.map Home Parser.top
+    , Parser.map Blocks (Parser.s "blocks")
+    , Parser.map BlockSpotlight (Parser.s "blocks" </> Parser.string)
+    ]
+
+
+-- UPDATE
+
+
+type Msg
+  = LinkClicked Browser.UrlRequest
+  | UrlChanged Url.Url
+  | BlocksPageMsg Page.Blocks.Msg
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    -- let
+    --     _ = Debug.log "model before update" model
+    --     _ = Debug.log "Received message" msg
+    -- in
+  case msg of
+    LinkClicked urlRequest ->
+      case urlRequest of
+        Browser.Internal url ->
+          ( model , Nav.pushUrl model.key (Url.toString url) )
+
+        Browser.External href ->
+          ( model, Nav.load href )
+
+    UrlChanged url ->  
+        let
+            parsedRoute = Parser.parse routeParser url |> Maybe.withDefault Home
+            cmd = case parsedRoute of
+                Blocks ->
+                    Page.Blocks.getBlocks
+                _ -> 
+                    Cmd.none
+        in
+        ( { model | url = url, route = parsedRoute }
+        , cmd |> Cmd.map BlocksPageMsg
+        )
+    BlocksPageMsg blocksMsg ->
+            let
+                (updatedBlocksModel, blocksCmd) =
+                    Page.Blocks.update blocksMsg model.blocksPage
+                _ = Debug.log "Updated Blocks Model" { model | blocksPage = updatedBlocksModel }
+            in
+            ( { model | blocksPage = updatedBlocksModel }
+            , Cmd.map BlocksPageMsg blocksCmd
+            )
+        
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+  Sub.none
+
+
+
+-- VIEW
+
 
 view : Model -> Browser.Document Msg
-view (Model model) =
+view model =
     { title = "MINA Blockchain Explorer"
     , body =
         [ div [ class "my-2 flex flex-col justify-start align-center w-full" ]
@@ -55,34 +134,19 @@ view (Model model) =
                 [ a [ href "/", class "text-blue-600 mx-2 hover:underline" ] [ text "Home" ]
                 , a [ href "/blocks", class "text-blue-600 mx-2 hover:underline" ] [ text "Blocks" ]
                 ]
-            , Router.view model.router (Model model)
             ]
+        , viewRoute model.route model
         ]
     }
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg (Model model) =
-    case msg of
-        RouterMsg routerMsg ->
-            let
-                ( newRouter, _, routerCmd ) = Router.update routerMsg model.router (Model model)
-            in
-            case routerMsg of
-                Router.Navigate "blocks" ->
-                    ( Model { model | router = newRouter, blocks = Just Blocks.initModel }
-                    , Cmd.batch [ Cmd.map RouterMsg routerCmd, Cmd.map BlocksMsg Blocks.getBlocks ]
-                    )
-                _ -> ( Model { model | router = newRouter }
-                    , Cmd.map RouterMsg routerCmd
-                    )
+viewRoute : Route -> Model -> Html Msg
+viewRoute route model =
+    case route of
+        Blocks -> Page.Blocks.view model.blocksPage
+        Home -> Page.Home.view
+        _ -> Page.Home.view
+    
 
-        BlocksMsg blocksMsg ->
-            let
-                ( newBlocksModel, blocksCmd ) =
-                    case model.blocks of
-                        Just blocksModel -> Blocks.update blocksMsg blocksModel
-                        Nothing -> Blocks.update blocksMsg Blocks.initModel
-            in
-            ( Model { model | blocks = Just newBlocksModel }
-            , Cmd.map BlocksMsg blocksCmd
-            )
+viewLink : String -> String -> Html msg
+viewLink label path =
+  li [] [ a [ href path ] [ text label ] ]

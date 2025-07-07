@@ -8,4 +8,9 @@ task :start => :clean do
   sh "elm-live src/Main.elm --start-page=templates/tailwind.html --pushstate -- --output=.build/out.js --debug"
 end
 
+desc "Compile the Elm app"
+task :compile => :clean do
+  sh "elm make src/Main.elm --output=.build/out.js --debug"
+end
+
 task default: :start

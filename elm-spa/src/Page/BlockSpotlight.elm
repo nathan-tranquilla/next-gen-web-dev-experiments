@@ -1,19 +1,11 @@
-module Page.BlockSpotlight exposing (view, routeConfig)
+module Page.BlockSpotlight exposing (view)
 
 import Html exposing (Html, div, text)
-import RouteConfig exposing (RouteConfig, Path(..))
-import Url.Parser as Parser exposing ((</>))
-import Shared exposing (Model(..), Msg)
 
-view : Model -> Html Msg
-view (Model model) =
+view : String -> Html msg
+view stateHash=
     div []
         [ text "Block Spotlight Page"
-        , div [] [ text ("Statehash: " ++ (List.head model.router.pathParams |> Maybe.withDefault "unknown")) ]
+        , div [] [ text ("Statehash: " ++ stateHash) ]
         ]
 
-routeConfig : RouteConfig Model Msg
-routeConfig =
-    { path = Dynamic (Parser.s "blocks" </> Parser.string)
-    , view = view
-    }
