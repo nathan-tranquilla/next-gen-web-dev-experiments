@@ -1,0 +1,266 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "install": {
+      "nodejs": {
+        "pkg-path": "nodejs"
+      },
+      "yarn": {
+        "pkg-path": "yarn"
+      }
+    },
+    "hook": {},
+    "profile": {},
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ]
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/441r91a4dyq7kz1c4mnr1nzjzk1b2ira-nodejs-22.16.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "nodejs-22.16.0",
+      "pname": "nodejs",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T05:14:37.882988Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.16.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/78lk3dc4gmcnzmxm4izkvbvr56jdz1x9-nodejs-22.16.0-dev",
+        "libv8": "/nix/store/4fwln9knqmx59msrm0i5di5r7p18kf4p-nodejs-22.16.0-libv8",
+        "out": "/nix/store/abxz7wpw5kwaijzzmf8rl4ga981vk8pc-nodejs-22.16.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/7v7707mb89xi7ma04cw531xak1zwy22l-nodejs-22.16.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "nodejs-22.16.0",
+      "pname": "nodejs",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T05:34:35.544030Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.16.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/sbp52l9kksr47xxkfvn8ap2lkygxj8sk-nodejs-22.16.0-dev",
+        "libv8": "/nix/store/332a0dqmiqf32mjzs8j9bia9n6rlqmga-nodejs-22.16.0-libv8",
+        "out": "/nix/store/jssj55ihylzsnzc83cybad4fgfs3bcny-nodejs-22.16.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/w8k8k5spym6yqia6xhf46ln6b07gpk62-nodejs-22.16.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "nodejs-22.16.0",
+      "pname": "nodejs",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T05:52:55.468531Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.16.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/y48cb55420c58rfg54mh3rqiw2bfhdqs-nodejs-22.16.0-dev",
+        "libv8": "/nix/store/qwmhg3jf6b7jzgnjjiw6v84fs9bakfps-nodejs-22.16.0-libv8",
+        "out": "/nix/store/swzij8xmzv1c81rvhcf2fzlnarjpjcnb-nodejs-22.16.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/rc4grl39rx1sp3fyf5wsmnp9ksa9a0v5-nodejs-22.16.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "nodejs-22.16.0",
+      "pname": "nodejs",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T06:14:28.918309Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.16.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/f4mwqm5lg34430cx759rpn2ibf652s8j-nodejs-22.16.0-dev",
+        "libv8": "/nix/store/a6jybrxgmdpgy7kyxjh9sv97cp2xgw5h-nodejs-22.16.0-libv8",
+        "out": "/nix/store/pjr8jcds298brhwy1d3rmym9vayxhbfs-nodejs-22.16.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "yarn",
+      "broken": false,
+      "derivation": "/nix/store/p34i45j63k1f7d0ims4767qq26fxhl5h-yarn-1.22.22.drv",
+      "description": "Fast, reliable, and secure dependency management for javascript",
+      "install_id": "yarn",
+      "license": "BSD-2-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "yarn-1.22.22",
+      "pname": "yarn",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T05:15:40.269807Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.22.22",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/k2b00nykr3pr34xcz4vn4xfhknd59rr2-yarn-1.22.22"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "yarn",
+      "broken": false,
+      "derivation": "/nix/store/ciw693h7f4izh28d3pjaa5i4p9r9hfxv-yarn-1.22.22.drv",
+      "description": "Fast, reliable, and secure dependency management for javascript",
+      "install_id": "yarn",
+      "license": "BSD-2-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "yarn-1.22.22",
+      "pname": "yarn",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T05:36:05.419721Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.22.22",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/z1baspkzkiaj0k3faxwvk130ilbhi9lm-yarn-1.22.22"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "yarn",
+      "broken": false,
+      "derivation": "/nix/store/msf6nsqzy6w93nwifjz5r9zggd04dgmv-yarn-1.22.22.drv",
+      "description": "Fast, reliable, and secure dependency management for javascript",
+      "install_id": "yarn",
+      "license": "BSD-2-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "yarn-1.22.22",
+      "pname": "yarn",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T05:53:58.400190Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.22.22",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/crfwdq90h9byj2njzpr610s0gwxhjqwc-yarn-1.22.22"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "yarn",
+      "broken": false,
+      "derivation": "/nix/store/lvwdzzgh9alri1d6yf4n6ar3l11kkdv8-yarn-1.22.22.drv",
+      "description": "Fast, reliable, and secure dependency management for javascript",
+      "install_id": "yarn",
+      "license": "BSD-2-Clause",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "name": "yarn-1.22.22",
+      "pname": "yarn",
+      "rev": "1fd8bada0b6117e6c7eb54aad5813023eed37ccb",
+      "rev_count": 826054,
+      "rev_date": "2025-07-06T08:59:25Z",
+      "scrape_date": "2025-07-08T06:16:04.860452Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.22.22",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/fp98fzb6mw6159pbgnwrhpag4w3mc8zq-yarn-1.22.22"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
