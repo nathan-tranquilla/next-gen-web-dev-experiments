@@ -2,3 +2,7 @@
 /lib/
 .bsb.lock
 **/*.res.mjs
+
+/lib/
+.bsb.lock
+**/*.res.mjs
