@@ -1,6 +1,6 @@
 // src/components/RecipeList.tsx
 import React from 'react';
-import { Recipe } from '../types.ts';
+import { recipe as Recipe } from '../Types.gen.tsx';
 
 interface RecipeListProps {
   recipes: Recipe[];

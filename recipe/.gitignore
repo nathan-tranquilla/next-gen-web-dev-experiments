@@ -6,3 +6,4 @@
 /lib/
 .bsb.lock
 **/*.res.mjs
+**/*.gen.tsx

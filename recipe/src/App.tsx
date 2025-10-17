@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // import RecipeForm from './components/RecipeForm.tsx';
 import { make as RecipeForm } from './components/RecipeForm.res.mjs' 
 import RecipeList from './components/RecipeList.tsx';
-import { Recipe } from './types.ts';
+import { recipe as Recipe } from './Types.gen.tsx';
 
 function App() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
