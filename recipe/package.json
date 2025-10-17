@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@rescript/core": "^1.6.1",
+    "@rescript/react": "^0.14.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/uuid": "^9.0.8",
