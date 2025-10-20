@@ -7,7 +7,7 @@ type action = AddName(string)
   | AddIngredient
   | StageStep(string)
   | AddStep
-  | AddRecipe
+  | Clear
 
 type state = {
   form_error: option<string>,
@@ -26,7 +26,6 @@ let initialState = {
 }
 
 let reducer = (state, action) => {
-  Console.log(state)
   switch action {
   | AddName(name) => { 
       ...state, 
@@ -87,14 +86,14 @@ let reducer = (state, action) => {
       | None => state 
       }
     }
-  | AddRecipe => { 
+  | Clear => { 
       // First add an ID to the recipe builder
       let recipeWithId = state.staged_recipe->Types.RecipeBuilder.withId("recipe-" ++ Js.Date.now()->Float.toString)
       
       switch recipeWithId->Types.RecipeBuilder.build {
-      | Ok(recipe) => {
+      | Ok(_) => {
           form_error: None,
-          recipes: Belt.Array.concat(state.recipes, [recipe]),
+          recipes: [],
           staged_recipe: Types.RecipeBuilder.empty(),
           staged_ingredient: Types.IngredientBuilder.empty(),
           staged_step: None
@@ -109,7 +108,7 @@ let reducer = (state, action) => {
 }
 
 @react.component
-let make = () => {
+let make = (~onAddRecipe: Types.recipe => unit) => {
 
   let (state, dispatch) = React.useReducer(reducer, initialState);
 
@@ -272,8 +271,15 @@ let make = () => {
       <button 
         type_="submit"
         onClick={(ev) => {
-          ev->JsxEventU.Mouse.preventDefault
-          dispatch(AddRecipe)
+          ev->JsxEventU.Mouse.preventDefault          
+          let recipeWithId = state.staged_recipe->Types.RecipeBuilder.withId("recipe-" ++ Js.Date.now()->Float.toString)
+          switch recipeWithId->Types.RecipeBuilder.build {
+          | Ok(recipe) => {
+            onAddRecipe(recipe)
+            dispatch(Clear)
+          }
+          | Error(_) => () 
+          }
         }}
         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-md transition-colors"
       >

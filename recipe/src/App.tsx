@@ -18,7 +18,7 @@ function App() {
         <h1 className="text-4xl font-bold text-gray-900 text-center mb-8">Recipe Planner</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* <RecipeForm onAddRecipe={addRecipe} /> */}
-          <RecipeForm />
+          <RecipeForm onAddRecipe={addRecipe} />
           <RecipeList recipes={recipes} />
         </div>
       </div>
