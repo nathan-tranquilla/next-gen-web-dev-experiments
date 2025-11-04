@@ -1,0 +1,17 @@
+
+task :dev do 
+  pids = []
+  
+  pids << spawn("npm run res:dev")
+  pids << spawn("npm run start")
+  
+  trap("INT") do
+    pids.each { |pid| 
+      puts "killing process #{pid}"
+      Process.kill("TERM", pid) rescue nil 
+    }
+    exit
+  end
+  
+  pids.each { |pid| Process.wait(pid) }
+end

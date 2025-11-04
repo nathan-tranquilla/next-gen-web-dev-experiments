@@ -16,6 +16,7 @@ version = 1
 ## -------------------------------------------------------------------
 [install]
 nodejs.pkg-path = "nodejs"
+ruby.pkg-path = "ruby"
 # gum.pkg-path = "gum"
 # gum.version = "^0.14.5"
 
