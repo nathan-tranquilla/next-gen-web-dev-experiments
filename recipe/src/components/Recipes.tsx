@@ -1,11 +1,11 @@
 // src/App.tsx
 import React, { useState } from 'react';
 // import RecipeForm from './components/RecipeForm.tsx';
-import { make as RecipeForm } from './components/RecipeForm.res.mjs' 
-import RecipeList from './components/RecipeList.tsx';
-import { recipe as Recipe } from './Types.gen.tsx';
+import { make as RecipeForm } from './RecipeForm.res.mjs' 
+import RecipeList from './RecipeList.tsx';
+import { recipe as Recipe } from '../Types.gen.tsx';
 
-function App() {
+function Recipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
   const addRecipe = (recipe: Recipe) => {
@@ -26,4 +26,4 @@ function App() {
   );
 }
 
-export default App;
+export default Recipes;

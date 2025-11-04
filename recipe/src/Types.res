@@ -1,13 +1,12 @@
 @genType
-type nutrition = {
-  totalCalories: int
-}
+type nutrition = {totalCalories: int}
 
 @genType
-type measuringUnit = G 
+type measuringUnit =
+  | G
   | Oz
-  | Ml 
-  | Cup 
+  | Ml
+  | Cup
   | Tbsp
 
 // Helper functions for measuring units
@@ -39,7 +38,7 @@ type ingredient = {
   name: string,
   quantity: int,
   unit: measuringUnit,
-  caloriesPerUnit: int
+  caloriesPerUnit: int,
 }
 
 @genType
@@ -90,7 +89,7 @@ module RecipeBuilder = {
     ingredients: Some(
       builder.ingredients
       ->Belt.Option.getWithDefault([])
-      ->Array.concat([ingredient])
+      ->Array.concat([ingredient]),
     ),
   }
 
@@ -99,7 +98,7 @@ module RecipeBuilder = {
     ingredients: Some(
       builder.ingredients
       ->Belt.Option.getWithDefault([])
-      ->Array.concat(ingredients)
+      ->Array.concat(ingredients),
     ),
   }
 
@@ -115,10 +114,11 @@ module RecipeBuilder = {
 
   // Calculate nutrition based on ingredients and servings
   let calculateNutrition = (ingredients: array<ingredient>, servings: int): nutrition => {
-    let totalCalories = ingredients
+    let totalCalories =
+      ingredients
       ->Array.map(ing => ing.quantity * ing.caloriesPerUnit)
       ->Array.reduce(0, (acc, calories) => acc + calories)
-    
+
     {
       totalCalories: totalCalories / servings,
     }
@@ -144,7 +144,6 @@ module RecipeBuilder = {
     | (_, _, _, None) => Error("Ingredients are required")
     }
   }
-
 }
 
 // Builder pattern for ingredients
@@ -185,13 +184,13 @@ module IngredientBuilder = {
 
   let build = (builder: t): result<ingredient, string> => {
     switch (builder.name, builder.quantity, builder.unit, builder.caloriesPerUnit) {
-    | (Some(name), Some(quantity), Some(unit), Some(caloriesPerUnit)) => 
-        Ok({
-          name,
-          quantity,
-          unit,
-          caloriesPerUnit,
-        })
+    | (Some(name), Some(quantity), Some(unit), Some(caloriesPerUnit)) =>
+      Ok({
+        name,
+        quantity,
+        unit,
+        caloriesPerUnit,
+      })
     | (None, _, _, _) => Error("Ingredient name is required")
     | (_, None, _, _) => Error("Ingredient quantity is required")
     | (_, _, None, _) => Error("Ingredient unit is required")

@@ -1,5 +1,10 @@
 
-task :dev do 
+file 'node_modules' do 
+  sh "npm install"
+end 
+task :install => 'node_modules'
+
+task :dev => [:install] do 
   pids = []
   
   pids << spawn("npm run res:dev")
@@ -14,4 +19,8 @@ task :dev do
   end
   
   pids.each { |pid| Process.wait(pid) }
+end
+
+task :format => [:install] do 
+  sh "npx rescript format -all "
 end
